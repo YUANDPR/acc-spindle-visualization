@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.acc.work.mapper.ExcelMapper">
+
+    <insert id="insertBatch">
+        insert into work_order (order_id, material_id, description, order_quantity, start_time, finish_time)
+        values
+        <foreach collection="orderData" item="od" separator=",">
+            (#{od.orderId}, #{od.materialId}, #{od.description},
+            #{od.orderQuantity}, #{od.startTime}, #{od.finishTime})
+        </foreach>
+    </insert>
+
+</mapper>
