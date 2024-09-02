@@ -1,6 +1,8 @@
 package com.acc.core.properties;
 
 import com.acc.core.annotation.Anonymous;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.Advised;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +21,7 @@ import java.util.Objects;
  * 设置Anonymous注解允许匿名访问的url
  */
 @Configuration
+@Slf4j
 public class PermitAllUrlProperties implements InitializingBean, ApplicationContextAware {
     private List<String> urls = new ArrayList<>();
 
@@ -28,7 +31,12 @@ public class PermitAllUrlProperties implements InitializingBean, ApplicationCont
     public void afterPropertiesSet() throws Exception {
         Map<String, Object> controllers = applicationContext.getBeansWithAnnotation(Controller.class);
         for (Object bean : controllers.values()) {
-            Class<?> beanClass = bean.getClass();
+            Class<?> beanClass;
+            if (bean instanceof Advised) {
+                beanClass = ((Advised) bean).getTargetSource().getTarget().getClass();
+            }else {
+                beanClass = bean.getClass();
+            }
             RequestMapping base = beanClass.getAnnotation(RequestMapping.class);
             String[] baseUrl = {};
             if (Objects.nonNull(base)) {
@@ -60,6 +68,7 @@ public class PermitAllUrlProperties implements InitializingBean, ApplicationCont
             }
 
         }
+        log.info("匿名访问urls：{}", urls);
     }
 
     private List<String> rebuildUrl(String[] bases, String[] uris) {
