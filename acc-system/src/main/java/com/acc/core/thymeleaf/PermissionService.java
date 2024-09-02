@@ -1,4 +1,4 @@
-package com.acc.service.thymeleaf;
+package com.acc.core.thymeleaf;
 
 import com.acc.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;

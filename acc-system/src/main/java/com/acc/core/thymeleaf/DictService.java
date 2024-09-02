@@ -1,4 +1,4 @@
-package com.acc.service.thymeleaf;
+package com.acc.core.thymeleaf;
 
 import com.acc.core.entity.DictData;
 import com.acc.service.DictDataService;

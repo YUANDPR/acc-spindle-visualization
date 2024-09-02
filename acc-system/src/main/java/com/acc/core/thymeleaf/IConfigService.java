@@ -1,4 +1,4 @@
-package com.acc.service.thymeleaf;
+package com.acc.core.thymeleaf;
 
 import com.acc.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
