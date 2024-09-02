@@ -9,7 +9,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.yuand</groupId>
     <artifactId>acc-work</artifactId>
 
     <properties>
@@ -51,9 +50,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <artifactId>commons-math3</artifactId>
         </dependency>
-
     </dependencies>
-
 </project>

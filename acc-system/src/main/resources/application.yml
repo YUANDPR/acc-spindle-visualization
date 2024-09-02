@@ -73,9 +73,6 @@ logging:
   level:
     com:
       acc:
-        work:
-          mapper: debug
-        system:
           mapper: debug
 
 # mybatis

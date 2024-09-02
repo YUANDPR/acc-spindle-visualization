@@ -2,7 +2,7 @@ package com.acc.core.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.math3.util.Pair;
 
 import java.time.LocalDateTime;
 import java.util.List;

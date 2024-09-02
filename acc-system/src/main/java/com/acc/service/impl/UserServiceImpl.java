@@ -332,7 +332,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkPhoneUnique(User user) {
         Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
-        User info = userMapper.checkPhoneUnique(user.getPhonenumber());
+        User info = userMapper.checkPhoneUnique(user.getPhone());
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
