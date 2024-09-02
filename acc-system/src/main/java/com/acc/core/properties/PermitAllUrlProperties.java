@@ -1,7 +1,6 @@
 package com.acc.core.properties;
 
 import com.acc.core.annotation.Anonymous;
-import org.springframework.aop.framework.Advised;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -29,10 +28,7 @@ public class PermitAllUrlProperties implements InitializingBean, ApplicationCont
     public void afterPropertiesSet() throws Exception {
         Map<String, Object> controllers = applicationContext.getBeansWithAnnotation(Controller.class);
         for (Object bean : controllers.values()) {
-            if (!(bean instanceof Advised)) {
-                continue;
-            }
-            Class<?> beanClass = ((Advised) bean).getTargetSource().getTarget().getClass();
+            Class<?> beanClass = bean.getClass();
             RequestMapping base = beanClass.getAnnotation(RequestMapping.class);
             String[] baseUrl = {};
             if (Objects.nonNull(base)) {

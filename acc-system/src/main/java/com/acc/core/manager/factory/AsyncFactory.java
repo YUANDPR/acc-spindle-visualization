@@ -2,9 +2,11 @@ package com.acc.core.manager.factory;
 
 import com.acc.core.constant.Constants;
 import com.acc.core.entity.LoginInfo;
+import com.acc.core.entity.OperLog;
 import com.acc.core.entity.UserOnline;
 import com.acc.core.session.OnlineSession;
 import com.acc.core.utils.*;
+import com.acc.service.OperLogService;
 import com.acc.service.UserOnlineService;
 import com.acc.service.impl.LoginInfoServiceImpl;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -89,6 +91,23 @@ public class AsyncFactory {
                 }
                 // 插入数据
                 SpringUtils.getBean(LoginInfoServiceImpl.class).insertLoginInfo(loginInfo);
+            }
+        };
+    }
+
+    /**
+     * 操作日志记录
+     *
+     * @param operLog 操作日志信息
+     * @return 任务task
+     */
+    public static TimerTask recordOper(final OperLog operLog) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                // 远程查询操作地点
+                operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
+                SpringUtils.getBean(OperLogService.class).insertOperlog(operLog);
             }
         };
     }
