@@ -15,9 +15,8 @@
     <description>ACC主轴线流程可视化</description>
 
     <modules>
-        <module>acc-common</module>
-        <module>acc-pojo</module>
-        <module>acc-server</module>
+        <module>acc-system</module>
+        <module>acc-work</module>
         <module>jiandaoyun-api</module>
     </modules>
 
