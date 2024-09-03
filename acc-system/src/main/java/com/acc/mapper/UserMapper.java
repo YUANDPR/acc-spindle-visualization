@@ -108,7 +108,7 @@ public interface UserMapper {
     /**
      * 校验手机号码是否唯一
      *
-     * @param phonenumber 手机号码
+     * @param phone 手机号码
      * @return 结果
      */
     User checkPhoneUnique(String phone);

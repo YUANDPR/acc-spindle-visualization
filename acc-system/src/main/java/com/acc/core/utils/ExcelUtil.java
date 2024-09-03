@@ -12,6 +12,7 @@ import com.acc.core.text.Convert;
 import com.acc.core.utils.file.FileTypeUtils;
 import com.acc.core.utils.file.FileUtils;
 import com.acc.core.utils.file.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -24,8 +25,6 @@ import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.*;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -42,6 +41,7 @@ import java.util.stream.Collectors;
 /**
  * Excel相关处理
  */
+@Slf4j
 public class ExcelUtil<T> {
     public static final String FORMULA_REGEX_STR = "=|-|\\+|@";
     public static final String[] FORMULA_STR = {"=", "-", "+", "@"};
@@ -49,7 +49,6 @@ public class ExcelUtil<T> {
      * Excel sheet最大行数，默认65536
      */
     public static final int sheetSize = 65536;
-    private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
     /**
      * 数字格式
      */

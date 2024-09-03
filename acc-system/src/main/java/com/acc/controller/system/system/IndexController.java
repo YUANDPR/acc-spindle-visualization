@@ -1,5 +1,6 @@
-package com.acc.controller.system;
+package com.acc.controller.system.system;
 
+import com.acc.controller.system.BaseController;
 import com.acc.core.config.AccConfig;
 import com.acc.core.entity.Menu;
 import com.acc.core.entity.User;

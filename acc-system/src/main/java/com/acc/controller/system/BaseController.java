@@ -174,7 +174,7 @@ public class BaseController {
     /**
      * 设置用户缓存信息
      */
-    public void setSysUser(User user) {
+    public void setUser(User user) {
         ShiroUtils.setUser(user);
     }
 

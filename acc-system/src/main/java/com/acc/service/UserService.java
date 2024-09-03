@@ -44,10 +44,10 @@ public interface UserService {
     /**
      * 通过手机号码查询用户
      *
-     * @param phoneNumber 手机号码
+     * @param phone 手机号码
      * @return 用户对象信息
      */
-    User selectUserByPhoneNumber(String phoneNumber);
+    User selectUserByPhone(String phone);
 
     /**
      * 通过邮箱查询用户

@@ -1,5 +1,6 @@
-package com.acc.controller.system;
+package com.acc.controller.system.system;
 
+import com.acc.controller.system.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

@@ -3,9 +3,8 @@ package com.acc.core.utils.file;
 import com.acc.core.config.AccConfig;
 import com.acc.core.constant.Constants;
 import com.acc.core.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.util.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -17,8 +16,8 @@ import java.util.Arrays;
 /**
  * 图片处理工具类
  */
+@Slf4j
 public class ImageUtils {
-    private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
 
     public static byte[] getImage(String imagePath) {
         InputStream is = getFile(imagePath);

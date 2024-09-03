@@ -1,5 +1,6 @@
-package com.acc.controller.system;
+package com.acc.controller.system.system;
 
+import com.acc.controller.system.BaseController;
 import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.ServletUtils;
 import io.swagger.annotations.Api;

@@ -42,7 +42,7 @@
                                 登录名称：<input name="loginName" type="text"/>
                             </li>
                             <li>
-                                手机号码：<input name="phonenumber" type="text"/>
+                                手机号码：<input name="phone" type="text"/>
                             </li>
                             <li>
                                 用户状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
@@ -166,7 +166,7 @@
                     visible: false
                 },
                 {
-                    field: 'phonenumber',
+                    field: 'phone',
                     title: '手机'
                 },
                 {

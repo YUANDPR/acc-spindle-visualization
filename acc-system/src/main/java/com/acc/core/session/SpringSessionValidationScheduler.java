@@ -1,6 +1,7 @@
 package com.acc.core.session;
 
 import com.acc.core.utils.ThreadUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.session.mgt.SessionValidationScheduler;
 import org.apache.shiro.session.mgt.ValidatingSessionManager;
@@ -19,9 +20,9 @@ import java.util.concurrent.TimeUnit;
  * 自定义任务调度器完成
  */
 @Component
+@Slf4j
 public class SpringSessionValidationScheduler implements SessionValidationScheduler {
     public static final long DEFAULT_SESSION_VALIDATION_INTERVAL = DefaultSessionManager.DEFAULT_SESSION_VALIDATION_INTERVAL;
-    private static final Logger log = LoggerFactory.getLogger(SpringSessionValidationScheduler.class);
     /**
      * 定时器，用于处理超时的挂起请求，也用于连接断开时的重连。
      */

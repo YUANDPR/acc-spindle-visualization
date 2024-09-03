@@ -1,5 +1,6 @@
-package com.acc.controller.system;
+package com.acc.controller.system.system;
 
+import com.acc.controller.system.BaseController;
 import com.acc.core.annotation.Log;
 import com.acc.core.entity.Dept;
 import com.acc.core.entity.Role;
@@ -193,7 +194,7 @@ public class UserController extends BaseController {
         user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
         if (userService.resetUserPwd(user) > 0) {
             if (ShiroUtils.getUserId().longValue() == user.getUserId().longValue()) {
-                setSysUser(userService.selectUserById(user.getUserId()));
+                setUser(userService.selectUserById(user.getUserId()));
             }
             return success();
         }

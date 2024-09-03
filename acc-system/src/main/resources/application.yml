@@ -33,21 +33,65 @@ spring:
     active: dev
   datasource:
     #数据库基本配置
-    driver-class-name: ${acc.datasource.driver-class-name}
-    url: jdbc:mysql://${acc.datasource.host}:${acc.datasource.port}/${acc.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-    username: ${acc.datasource.username}
-    password: ${acc.datasource.password}
     type: com.alibaba.druid.pool.DruidDataSource
-    #druid连接池配置
+    driver-class-name: ${acc.datasource.driver-class-name}
+    # druid连接池配置
     druid:
-      # 初始化时建立物理连接的个数
-      initial-size: 5
-      # 连接池的最小空闲数量
-      min-idle: 5
-      # 连接池最大连接数量
-      max-active: 20
-      # 获取连接时最大等待时间，单位毫秒
-      max-wait: 60000
+      # 主库数据源
+      master:
+        url: jdbc:mysql://${acc.datasource.host}:${acc.datasource.port}/${acc.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+        username: ${acc.datasource.username}
+        password: ${acc.datasource.password}
+      # 从库数据源
+      slave:
+        # 从数据源开关/默认关闭
+        enabled: false
+        url:
+        username:
+        password:
+        # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置连接超时时间
+      connectTimeout: 30000
+      # 配置网络超时时间
+      socketTimeout: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: acc
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
@@ -61,7 +105,13 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
-
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
 # PageHelper分页插件
 pagehelper:
   helperDialect: mysql

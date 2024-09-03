@@ -2,11 +2,10 @@ package com.acc.core.utils.security;
 
 import com.acc.core.constant.PermissionConstants;
 import com.acc.core.utils.MessageUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -15,6 +14,7 @@ import java.beans.PropertyDescriptor;
 /**
  * permission 工具类
  */
+@Slf4j
 public class PermissionUtils {
     /**
      * 查看数据的权限
@@ -40,7 +40,6 @@ public class PermissionUtils {
      * 其他数据的权限
      */
     public static final String PERMISSION = "no.permission";
-    private static final Logger log = LoggerFactory.getLogger(PermissionUtils.class);
 
     /**
      * 权限错误消息提醒

@@ -23,7 +23,7 @@
     <properties>
         <java.version>17</java.version>
         <mybatis.version>3.0.0</mybatis.version>
-        <druid.version>1.2.20</druid.version>
+        <druid.version>1.2.23</druid.version>
         <knife4j.version>3.0.3</knife4j.version>
         <lombok.version>1.18.22</lombok.version>
         <easyexcel.version>4.0.2</easyexcel.version>

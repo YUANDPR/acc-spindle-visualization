@@ -1,15 +1,14 @@
 package com.acc.core.dto;
 
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
+@Slf4j
 public class ExecutingOrderDto {
     private static final AtomicInteger counter = new AtomicInteger(0);
-    private static final Logger log = LoggerFactory.getLogger(ExecutingOrderDto.class);
     Integer id;
     int orderId;
     int executingProcedureId;
