@@ -123,7 +123,7 @@ logging:
   level:
     com:
       acc:
-          mapper: debug
+        mapper: debug
 
 # mybatis
 mybatis:

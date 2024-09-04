@@ -10,7 +10,10 @@ import com.acc.core.enumeration.BusinessType;
 import com.acc.core.page.TableDataInfo;
 import com.acc.core.result.AjaxResult;
 import com.acc.core.text.Convert;
-import com.acc.core.utils.*;
+import com.acc.core.utils.AuthorizationUtils;
+import com.acc.core.utils.ExcelUtil;
+import com.acc.core.utils.ShiroUtils;
+import com.acc.core.utils.StringUtils;
 import com.acc.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -130,7 +133,6 @@ public class UserController extends BaseController {
         }
         user.setSalt(ShiroUtils.randomSalt());
         user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
-        user.setPwdUpdateDate(DateUtils.getNowDate());
         user.setCreateBy(getLoginName());
         return toAjax(userService.insertUser(user));
     }

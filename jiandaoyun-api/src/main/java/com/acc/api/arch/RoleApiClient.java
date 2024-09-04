@@ -1,12 +1,12 @@
 package com.acc.api.arch;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.acc.model.http.ApiClient;
 import com.acc.model.http.HttpRequestParam;
 import com.acc.model.role.RoleListQueryParam;
 import com.acc.model.role.RoleMemberQueryParam;
 import com.acc.model.role.RoleUpdateParam;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 

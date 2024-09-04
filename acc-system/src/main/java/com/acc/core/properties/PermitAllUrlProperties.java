@@ -34,7 +34,7 @@ public class PermitAllUrlProperties implements InitializingBean, ApplicationCont
             Class<?> beanClass;
             if (bean instanceof Advised) {
                 beanClass = ((Advised) bean).getTargetSource().getTarget().getClass();
-            }else {
+            } else {
                 beanClass = bean.getClass();
             }
             RequestMapping base = beanClass.getAnnotation(RequestMapping.class);

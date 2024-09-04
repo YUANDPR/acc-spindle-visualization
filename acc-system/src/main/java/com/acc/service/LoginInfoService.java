@@ -34,4 +34,5 @@ public interface LoginInfoService {
     /**
      * 清空系统登录日志
      */
-    void cleanLoginInfo();}
+    void cleanLoginInfo();
+}

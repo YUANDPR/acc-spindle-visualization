@@ -196,7 +196,7 @@ public class RoleController extends BaseController {
      * 选择角色树
      */
     @GetMapping("/selectMenuTree")
-    @ApiOperation("获取角色树")
+    @ApiOperation("选择角色树")
     public String selectMenuTree() {
         return prefix + "/tree";
     }
