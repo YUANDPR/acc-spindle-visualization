@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * knife4j接口
  */
-@Api(tags = "knife4j接口")
 @Controller
 @RequestMapping("/tool/swagger")
+@Api(tags = "knife4j")
 public class Knife4jController extends BaseController {
 
-    @ApiOperation("获取接口文档")
     @RequiresPermissions("tool:swagger:view")
     @GetMapping
+    @ApiOperation("获取接口文档页面")
     public String index() {
         return redirect("/doc.html");
     }

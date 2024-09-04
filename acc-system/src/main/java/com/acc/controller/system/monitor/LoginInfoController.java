@@ -9,6 +9,8 @@ import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.ExcelUtil;
 import com.acc.service.LoginInfoService;
 import com.acc.service.PasswordService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/monitor/loginInfo")
+@Api(tags = "登录日志")
 public class LoginInfoController extends BaseController {
     private String prefix = "monitor/loginInfo";
 
@@ -34,7 +37,8 @@ public class LoginInfoController extends BaseController {
     private PasswordService passwordService;
 
     @RequiresPermissions("monitor:loginInfo:view")
-    @GetMapping()
+    @GetMapping
+    @ApiOperation("获取登录日志页面")
     public String loginInfo() {
         return prefix + "/loginInfo";
     }
@@ -42,6 +46,7 @@ public class LoginInfoController extends BaseController {
     @RequiresPermissions("monitor:loginInfo:list")
     @PostMapping("/list")
     @ResponseBody
+    @ApiOperation("获取登录日志列表")
     public TableDataInfo list(LoginInfo loginInfo) {
         startPage();
         List<LoginInfo> list = loginInfoService.selectLoginInfoList(loginInfo);
@@ -52,6 +57,7 @@ public class LoginInfoController extends BaseController {
     @RequiresPermissions("monitor:loginInfo:export")
     @PostMapping("/export")
     @ResponseBody
+    @ApiOperation("导出登录日志")
     public AjaxResult export(LoginInfo loginInfo) {
         List<LoginInfo> list = loginInfoService.selectLoginInfoList(loginInfo);
         ExcelUtil<LoginInfo> util = new ExcelUtil<LoginInfo>(LoginInfo.class);
@@ -62,6 +68,7 @@ public class LoginInfoController extends BaseController {
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
+    @ApiOperation("删除登录日志")
     public AjaxResult remove(String ids) {
         return toAjax(loginInfoService.deleteLoginInfoByIds(ids));
     }
@@ -70,6 +77,7 @@ public class LoginInfoController extends BaseController {
     @Log(title = "登录日志", businessType = BusinessType.CLEAN)
     @PostMapping("/clean")
     @ResponseBody
+    @ApiOperation("清空登录日志")
     public AjaxResult clean() {
         loginInfoService.cleanLoginInfo();
         return success();
@@ -79,6 +87,7 @@ public class LoginInfoController extends BaseController {
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
     @PostMapping("/unlock")
     @ResponseBody
+    @ApiOperation("账户解锁")
     public AjaxResult unlock(String loginName) {
         passwordService.clearLoginRecordCache(loginName);
         return success();

@@ -7,6 +7,8 @@ import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.StringUtils;
 import com.acc.core.utils.file.FileUploadUtils;
 import com.acc.core.utils.file.FileUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,6 +30,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/common")
 @Slf4j
+@Api(tags = "通用处理")
 public class CommonController {
     private static final String FILE_DELIMETER = ",";
     @Autowired
@@ -40,6 +43,7 @@ public class CommonController {
      * @param delete   是否删除
      */
     @GetMapping("/download")
+    @ApiOperation("通用下载请求")
     public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
         try {
             if (!FileUtils.checkAllowDownload(fileName)) {
@@ -64,6 +68,7 @@ public class CommonController {
      */
     @PostMapping("/upload")
     @ResponseBody
+    @ApiOperation("通用单个上传请求")
     public AjaxResult uploadFile(MultipartFile file) throws Exception {
         try {
             // 上传文件路径
@@ -87,6 +92,7 @@ public class CommonController {
      */
     @PostMapping("/uploads")
     @ResponseBody
+    @ApiOperation("通用多个上传请求")
     public AjaxResult uploadFiles(List<MultipartFile> files) throws Exception {
         try {
             // 上传文件路径
@@ -119,6 +125,7 @@ public class CommonController {
      * 本地资源通用下载
      */
     @GetMapping("/download/resource")
+    @ApiOperation("本地资源通用下载")
     public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         try {

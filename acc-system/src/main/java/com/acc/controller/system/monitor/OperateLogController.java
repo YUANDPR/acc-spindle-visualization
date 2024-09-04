@@ -7,7 +7,9 @@ import com.acc.core.enumeration.BusinessType;
 import com.acc.core.page.TableDataInfo;
 import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.ExcelUtil;
-import com.acc.service.OperLogService;
+import com.acc.service.OperateLogService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +23,16 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/monitor/operlog")
-public class OperlogController extends BaseController {
+@Api(tags = "操作日志")
+public class OperateLogController extends BaseController {
     private String prefix = "monitor/operlog";
 
     @Autowired
-    private OperLogService operLogService;
+    private OperateLogService operateLogService;
 
     @RequiresPermissions("monitor:operlog:view")
-    @GetMapping()
+    @GetMapping
+    @ApiOperation("获取操作日志页面")
     public String operlog() {
         return prefix + "/operlog";
     }
@@ -36,9 +40,10 @@ public class OperlogController extends BaseController {
     @RequiresPermissions("monitor:operlog:list")
     @PostMapping("/list")
     @ResponseBody
+    @ApiOperation("获取操作日志列表")
     public TableDataInfo list(OperLog operLog) {
         startPage();
-        List<OperLog> list = operLogService.selectOperLogList(operLog);
+        List<OperLog> list = operateLogService.selectOperLogList(operLog);
         return getDataTable(list);
     }
 
@@ -46,8 +51,9 @@ public class OperlogController extends BaseController {
     @RequiresPermissions("monitor:operlog:export")
     @PostMapping("/export")
     @ResponseBody
+    @ApiOperation("导出操作日志")
     public AjaxResult export(OperLog operLog) {
-        List<OperLog> list = operLogService.selectOperLogList(operLog);
+        List<OperLog> list = operateLogService.selectOperLogList(operLog);
         ExcelUtil<OperLog> util = new ExcelUtil<OperLog>(OperLog.class);
         return util.exportExcel(list, "操作日志");
     }
@@ -56,14 +62,16 @@ public class OperlogController extends BaseController {
     @RequiresPermissions("monitor:operlog:remove")
     @PostMapping("/remove")
     @ResponseBody
+    @ApiOperation("删除操作日志")
     public AjaxResult remove(String ids) {
-        return toAjax(operLogService.deleteOperLogByIds(ids));
+        return toAjax(operateLogService.deleteOperLogByIds(ids));
     }
 
     @RequiresPermissions("monitor:operlog:detail")
     @GetMapping("/detail/{operId}")
+    @ApiOperation("获取操作日志详细信息")
     public String detail(@PathVariable("operId") Long operId, ModelMap mmap) {
-        mmap.put("operLog", operLogService.selectOperLogById(operId));
+        mmap.put("operLog", operateLogService.selectOperLogById(operId));
         return prefix + "/detail";
     }
 
@@ -71,8 +79,9 @@ public class OperlogController extends BaseController {
     @RequiresPermissions("monitor:operlog:remove")
     @PostMapping("/clean")
     @ResponseBody
+    @ApiOperation("清空操作日志")
     public AjaxResult clean() {
-        operLogService.cleanOperLog();
+        operateLogService.cleanOperLog();
         return success();
     }
 }

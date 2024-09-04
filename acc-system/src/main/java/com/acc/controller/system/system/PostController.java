@@ -8,6 +8,8 @@ import com.acc.core.page.TableDataInfo;
 import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.ExcelUtil;
 import com.acc.service.PostService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/system/post")
+@Api(tags = "岗位管理")
 public class PostController extends BaseController {
     private String prefix = "system/post";
 
@@ -29,7 +32,8 @@ public class PostController extends BaseController {
     private PostService postService;
 
     @RequiresPermissions("system:post:view")
-    @GetMapping()
+    @GetMapping
+    @ApiOperation("获取岗位管理页面")
     public String operlog() {
         return prefix + "/post";
     }
@@ -37,6 +41,7 @@ public class PostController extends BaseController {
     @RequiresPermissions("system:post:list")
     @PostMapping("/list")
     @ResponseBody
+    @ApiOperation("获取岗位列表")
     public TableDataInfo list(Post post) {
         startPage();
         List<Post> list = postService.selectPostList(post);
@@ -47,6 +52,7 @@ public class PostController extends BaseController {
     @RequiresPermissions("system:post:export")
     @PostMapping("/export")
     @ResponseBody
+    @ApiOperation("导出岗位信息")
     public AjaxResult export(Post post) {
         List<Post> list = postService.selectPostList(post);
         ExcelUtil<Post> util = new ExcelUtil<Post>(Post.class);
@@ -57,6 +63,7 @@ public class PostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
+    @ApiOperation("删除岗位")
     public AjaxResult remove(String ids) {
         try {
             return toAjax(postService.deletePostByIds(ids));
@@ -69,6 +76,7 @@ public class PostController extends BaseController {
      * 新增岗位
      */
     @GetMapping("/add")
+    @ApiOperation("获取新增岗位页面")
     public String add() {
         return prefix + "/add";
     }
@@ -80,6 +88,7 @@ public class PostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
+    @ApiOperation("新增并保存岗位")
     public AjaxResult addSave(@Validated Post post) {
         if (!postService.checkPostNameUnique(post)) {
             return error("新增岗位'" + post.getPostName() + "'失败，岗位名称已存在");
@@ -95,6 +104,7 @@ public class PostController extends BaseController {
      */
     @RequiresPermissions("system:post:edit")
     @GetMapping("/edit/{postId}")
+    @ApiOperation("获取修改岗位页面")
     public String edit(@PathVariable("postId") Long postId, ModelMap mmap) {
         mmap.put("post", postService.selectPostById(postId));
         return prefix + "/edit";
@@ -107,6 +117,7 @@ public class PostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
+    @ApiOperation("修改并保存岗位")
     public AjaxResult editSave(@Validated Post post) {
         if (!postService.checkPostNameUnique(post)) {
             return error("修改岗位'" + post.getPostName() + "'失败，岗位名称已存在");
@@ -122,6 +133,7 @@ public class PostController extends BaseController {
      */
     @PostMapping("/checkPostNameUnique")
     @ResponseBody
+    @ApiOperation("校验岗位名称")
     public boolean checkPostNameUnique(Post post) {
         return postService.checkPostNameUnique(post);
     }
@@ -131,6 +143,7 @@ public class PostController extends BaseController {
      */
     @PostMapping("/checkPostCodeUnique")
     @ResponseBody
+    @ApiOperation("校验岗位编码")
     public boolean checkPostCodeUnique(Post post) {
         return postService.checkPostCodeUnique(post);
     }

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 操作日志 数据层
  */
-public interface OperLogMapper {
+public interface OperateLogMapper {
     /**
      * 新增操作日志
      *

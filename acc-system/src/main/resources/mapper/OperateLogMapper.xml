@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.acc.mapper.OperLogMapper">
+<mapper namespace="com.acc.mapper.OperateLogMapper">
 
     <resultMap type="OperLog" id="SysOperLogResult">
         <id property="operId" column="oper_id"/>
@@ -25,11 +25,11 @@
     <sql id="selectOperLogVo">
         select oper_id, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url,
                oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time, cost_time
-        from sys_oper_log
+        from sys_operate_log
     </sql>
 
     <insert id="insertOperlog" parameterType="OperLog">
-        insert into sys_oper_log(title, business_type, method, request_method, operator_type, oper_name, dept_name,
+        insert into sys_operate_log(title, business_type, method, request_method, operator_type, oper_name, dept_name,
                                  oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, cost_time, oper_time)
         values (#{title}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{operName}, #{deptName},
                 #{operUrl}, #{operIp}, #{operLocation}, #{operParam}, #{jsonResult}, #{status}, #{errorMsg}, #{costTime},
@@ -70,7 +70,7 @@
     </select>
 
     <delete id="deleteOperLogByIds" parameterType="String">
-        delete from sys_oper_log where oper_id in
+        delete from sys_operate_log where oper_id in
         <foreach collection="array" item="operId" open="(" separator="," close=")">
             #{operId}
         </foreach>
@@ -82,6 +82,6 @@
     </select>
 
     <update id="cleanOperLog">
-        truncate table sys_oper_log
+        truncate table sys_operate_log
     </update>
 </mapper>

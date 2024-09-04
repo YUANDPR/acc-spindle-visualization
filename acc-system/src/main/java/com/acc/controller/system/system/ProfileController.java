@@ -13,6 +13,8 @@ import com.acc.core.utils.file.FileUploadUtils;
 import com.acc.core.utils.file.MimeTypeUtils;
 import com.acc.service.PasswordService;
 import com.acc.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/system/user/profile")
 @Slf4j
+@Api(tags = "个人信息管理")
 public class ProfileController extends BaseController {
 
     private String prefix = "system/user/profile";
@@ -39,7 +42,8 @@ public class ProfileController extends BaseController {
     /**
      * 个人信息
      */
-    @GetMapping()
+    @GetMapping
+    @ApiOperation("获取个人信息页面")
     public String profile(ModelMap mmap) {
         User user = getUser();
         mmap.put("user", user);
@@ -50,12 +54,14 @@ public class ProfileController extends BaseController {
 
     @GetMapping("/checkPassword")
     @ResponseBody
+    @ApiOperation("校验密码")
     public boolean checkPassword(String password) {
         User user = getUser();
         return passwordService.matches(user, password);
     }
 
     @GetMapping("/resetPwd")
+    @ApiOperation("获取修改密码页面")
     public String resetPwd(ModelMap mmap) {
         User user = getUser();
         mmap.put("user", userService.selectUserById(user.getUserId()));
@@ -65,6 +71,7 @@ public class ProfileController extends BaseController {
     @Log(title = "重置密码", businessType = BusinessType.UPDATE)
     @PostMapping("/resetPwd")
     @ResponseBody
+    @ApiOperation("修改密码")
     public AjaxResult resetPwd(String oldPassword, String newPassword) {
         User user = getUser();
         if (!passwordService.matches(user, oldPassword)) {
@@ -87,6 +94,7 @@ public class ProfileController extends BaseController {
      * 修改用户
      */
     @GetMapping("/edit")
+    @ApiOperation("获取修改用户页面")
     public String edit(ModelMap mmap) {
         User user = getUser();
         mmap.put("user", userService.selectUserById(user.getUserId()));
@@ -97,6 +105,7 @@ public class ProfileController extends BaseController {
      * 修改头像
      */
     @GetMapping("/avatar")
+    @ApiOperation("获取修改头像页面")
     public String avatar(ModelMap mmap) {
         User user = getUser();
         mmap.put("user", userService.selectUserById(user.getUserId()));
@@ -109,6 +118,7 @@ public class ProfileController extends BaseController {
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PostMapping("/update")
     @ResponseBody
+    @ApiOperation("修改并保存用户")
     public AjaxResult update(User user) {
         User currentUser = getUser();
         currentUser.setUserName(user.getUserName());
@@ -133,6 +143,7 @@ public class ProfileController extends BaseController {
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PostMapping("/updateAvatar")
     @ResponseBody
+    @ApiOperation("修改并保存头像")
     public AjaxResult updateAvatar(@RequestParam("avatarfile") MultipartFile file) {
         User currentUser = getUser();
         try {

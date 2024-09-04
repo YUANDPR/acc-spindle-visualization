@@ -12,6 +12,8 @@ import com.acc.core.result.AjaxResult;
 import com.acc.core.text.Convert;
 import com.acc.core.utils.*;
 import com.acc.service.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping("/system/user")
+@Api(tags = "用户管理")
 public class UserController extends BaseController {
     private String prefix = "system/user";
 
@@ -48,7 +51,8 @@ public class UserController extends BaseController {
     private PasswordService passwordService;
 
     @RequiresPermissions("system:user:view")
-    @GetMapping()
+    @GetMapping
+    @ApiOperation("获取用户管理页面")
     public String user() {
         return prefix + "/user";
     }
@@ -56,6 +60,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("system:user:list")
     @PostMapping("/list")
     @ResponseBody
+    @ApiOperation("获取用户列表")
     public TableDataInfo list(User user) {
         startPage();
         List<User> list = userService.selectUserList(user);
@@ -66,6 +71,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("system:user:export")
     @PostMapping("/export")
     @ResponseBody
+    @ApiOperation("导出用户信息")
     public AjaxResult export(User user) {
         List<User> list = userService.selectUserList(user);
         ExcelUtil<User> util = new ExcelUtil<User>(User.class);
@@ -76,6 +82,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("system:user:import")
     @PostMapping("/importData")
     @ResponseBody
+    @ApiOperation("导入用户信息")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<User> util = new ExcelUtil<User>(User.class);
         List<User> userList = util.importExcel(file.getInputStream());
@@ -86,6 +93,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("system:user:view")
     @GetMapping("/importTemplate")
     @ResponseBody
+    @ApiOperation("导出用户表格模版")
     public AjaxResult importTemplate() {
         ExcelUtil<User> util = new ExcelUtil<User>(User.class);
         return util.importTemplateExcel("用户数据");
@@ -95,6 +103,7 @@ public class UserController extends BaseController {
      * 新增用户
      */
     @GetMapping("/add")
+    @ApiOperation("获取新增用户页面")
     public String add(ModelMap mmap) {
         mmap.put("roles", roleService.selectRoleAll().stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         mmap.put("posts", postService.selectPostAll());
@@ -108,6 +117,7 @@ public class UserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
+    @ApiOperation("新增并保存用户")
     public AjaxResult addSave(@Validated User user) {
         deptService.checkDeptDataScope(user.getDeptId());
         roleService.checkRoleDataScope(user.getRoleIds());
@@ -130,6 +140,7 @@ public class UserController extends BaseController {
      */
     @RequiresPermissions("system:user:edit")
     @GetMapping("/edit/{userId}")
+    @ApiOperation("获取修改用户页面")
     public String edit(@PathVariable("userId") Long userId, ModelMap mmap) {
         userService.checkUserDataScope(userId);
         List<Role> roles = roleService.selectRolesByUserId(userId);
@@ -144,6 +155,7 @@ public class UserController extends BaseController {
      */
     @RequiresPermissions("system:user:list")
     @GetMapping("/view/{userId}")
+    @ApiOperation("获取用户详细信息")
     public String view(@PathVariable("userId") Long userId, ModelMap mmap) {
         userService.checkUserDataScope(userId);
         mmap.put("user", userService.selectUserById(userId));
@@ -159,6 +171,7 @@ public class UserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
+    @ApiOperation("修改并保存用户")
     public AjaxResult editSave(@Validated User user) {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
@@ -178,6 +191,7 @@ public class UserController extends BaseController {
 
     @RequiresPermissions("system:user:resetPwd")
     @GetMapping("/resetPwd/{userId}")
+    @ApiOperation("获取修改密码页面")
     public String resetPwd(@PathVariable("userId") Long userId, ModelMap mmap) {
         mmap.put("user", userService.selectUserById(userId));
         return prefix + "/resetPwd";
@@ -187,6 +201,7 @@ public class UserController extends BaseController {
     @Log(title = "重置密码", businessType = BusinessType.UPDATE)
     @PostMapping("/resetPwd")
     @ResponseBody
+    @ApiOperation("修改密码")
     public AjaxResult resetPwdSave(User user) {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
@@ -205,6 +220,7 @@ public class UserController extends BaseController {
      * 进入授权角色页
      */
     @GetMapping("/authRole/{userId}")
+    @ApiOperation("获取授权角色页面")
     public String authRole(@PathVariable("userId") Long userId, ModelMap mmap) {
         User user = userService.selectUserById(userId);
         // 获取用户所属的角色列表
@@ -221,6 +237,7 @@ public class UserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.GRANT)
     @PostMapping("/authRole/insertAuthRole")
     @ResponseBody
+    @ApiOperation("用户授权角色")
     public AjaxResult insertAuthRole(Long userId, Long[] roleIds) {
         userService.checkUserDataScope(userId);
         roleService.checkRoleDataScope(roleIds);
@@ -233,6 +250,7 @@ public class UserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
+    @ApiOperation("删除用户")
     public AjaxResult remove(String ids) {
         if (ArrayUtils.contains(Convert.toLongArray(ids), getUserId())) {
             return error("当前用户不能删除");
@@ -245,6 +263,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/checkLoginNameUnique")
     @ResponseBody
+    @ApiOperation("校验用户名")
     public boolean checkLoginNameUnique(User user) {
         return userService.checkLoginNameUnique(user);
     }
@@ -254,6 +273,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/checkPhoneUnique")
     @ResponseBody
+    @ApiOperation("校验手机号")
     public boolean checkPhoneUnique(User user) {
         return userService.checkPhoneUnique(user);
     }
@@ -263,6 +283,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/checkEmailUnique")
     @ResponseBody
+    @ApiOperation("校验邮箱")
     public boolean checkEmailUnique(User user) {
         return userService.checkEmailUnique(user);
     }
@@ -274,6 +295,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("system:user:edit")
     @PostMapping("/changeStatus")
     @ResponseBody
+    @ApiOperation("修改用户状态")
     public AjaxResult changeStatus(User user) {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
@@ -286,6 +308,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("system:user:list")
     @GetMapping("/deptTreeData")
     @ResponseBody
+    @ApiOperation("获取部门树")
     public List<Ztree> deptTreeData() {
         List<Ztree> ztrees = deptService.selectDeptTree(new Dept());
         return ztrees;
@@ -298,6 +321,7 @@ public class UserController extends BaseController {
      */
     @RequiresPermissions("system:user:list")
     @GetMapping("/selectDeptTree/{deptId}")
+    @ApiOperation("选择部门树")
     public String selectDeptTree(@PathVariable("deptId") Long deptId, ModelMap mmap) {
         mmap.put("dept", deptService.selectDeptById(deptId));
         return prefix + "/deptTree";

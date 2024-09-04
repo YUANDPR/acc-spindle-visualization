@@ -6,7 +6,7 @@ import com.acc.core.entity.OperLog;
 import com.acc.core.entity.UserOnline;
 import com.acc.core.session.OnlineSession;
 import com.acc.core.utils.*;
-import com.acc.service.OperLogService;
+import com.acc.service.OperateLogService;
 import com.acc.service.UserOnlineService;
 import com.acc.service.impl.LoginInfoServiceImpl;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -107,7 +107,7 @@ public class AsyncFactory {
             public void run() {
                 // 远程查询操作地点
                 operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
-                SpringUtils.getBean(OperLogService.class).insertOperlog(operLog);
+                SpringUtils.getBean(OperateLogService.class).insertOperlog(operLog);
             }
         };
     }

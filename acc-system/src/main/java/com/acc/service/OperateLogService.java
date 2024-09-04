@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 操作日志 服务层
  */
-public interface OperLogService {
+public interface OperateLogService {
     /**
      * 新增操作日志
      *

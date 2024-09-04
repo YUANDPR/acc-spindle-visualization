@@ -2,8 +2,8 @@ package com.acc.service.impl;
 
 import com.acc.core.entity.OperLog;
 import com.acc.core.text.Convert;
-import com.acc.mapper.OperLogMapper;
-import com.acc.service.OperLogService;
+import com.acc.mapper.OperateLogMapper;
+import com.acc.service.OperateLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +13,9 @@ import java.util.List;
  * 操作日志 服务层处理
  */
 @Service
-public class OperLogServiceImpl implements OperLogService {
+public class OperateLogServiceImpl implements OperateLogService {
     @Autowired
-    private OperLogMapper operLogMapper;
+    private OperateLogMapper operateLogMapper;
 
     /**
      * 新增操作日志
@@ -24,7 +24,7 @@ public class OperLogServiceImpl implements OperLogService {
      */
     @Override
     public void insertOperlog(OperLog operLog) {
-        operLogMapper.insertOperlog(operLog);
+        operateLogMapper.insertOperlog(operLog);
     }
 
     /**
@@ -35,7 +35,7 @@ public class OperLogServiceImpl implements OperLogService {
      */
     @Override
     public List<OperLog> selectOperLogList(OperLog operLog) {
-        return operLogMapper.selectOperLogList(operLog);
+        return operateLogMapper.selectOperLogList(operLog);
     }
 
     /**
@@ -46,7 +46,7 @@ public class OperLogServiceImpl implements OperLogService {
      */
     @Override
     public int deleteOperLogByIds(String ids) {
-        return operLogMapper.deleteOperLogByIds(Convert.toStrArray(ids));
+        return operateLogMapper.deleteOperLogByIds(Convert.toStrArray(ids));
     }
 
     /**
@@ -57,7 +57,7 @@ public class OperLogServiceImpl implements OperLogService {
      */
     @Override
     public OperLog selectOperLogById(Long operId) {
-        return operLogMapper.selectOperLogById(operId);
+        return operateLogMapper.selectOperLogById(operId);
     }
 
     /**
@@ -65,6 +65,6 @@ public class OperLogServiceImpl implements OperLogService {
      */
     @Override
     public void cleanOperLog() {
-        operLogMapper.cleanOperLog();
+        operateLogMapper.cleanOperLog();
     }
 }

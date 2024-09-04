@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Controller
 @Slf4j
-@Api(tags = "首页接口")
+@Api(tags = "首页")
 public class IndexController extends BaseController {
 
     @Autowired
@@ -41,7 +41,7 @@ public class IndexController extends BaseController {
      * 系统首页
      */
     @GetMapping("/index")
-    @ApiOperation("获取首页")
+    @ApiOperation("获取首页页面")
     public String index(ModelMap mmap) {
         // 取身份信息
         User user = getUser();
@@ -82,8 +82,8 @@ public class IndexController extends BaseController {
     /**
      * 系统介绍
      */
-    @ApiOperation("系统介绍")
     @GetMapping("/system/main")
+    @ApiOperation("获取系统介绍主页面")
     public String main(ModelMap mmap) {
         mmap.put("version", AccConfig.getVersion());
         return "main";

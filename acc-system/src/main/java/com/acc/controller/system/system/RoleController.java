@@ -15,6 +15,8 @@ import com.acc.core.utils.ExcelUtil;
 import com.acc.service.DeptService;
 import com.acc.service.RoleService;
 import com.acc.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/system/role")
+@Api(tags = "角色管理")
 public class RoleController extends BaseController {
     private String prefix = "system/role";
 
@@ -42,7 +45,8 @@ public class RoleController extends BaseController {
     private DeptService deptService;
 
     @RequiresPermissions("system:role:view")
-    @GetMapping()
+    @GetMapping
+    @ApiOperation("获取角色管理页面")
     public String role() {
         return prefix + "/role";
     }
@@ -50,6 +54,7 @@ public class RoleController extends BaseController {
     @RequiresPermissions("system:role:list")
     @PostMapping("/list")
     @ResponseBody
+    @ApiOperation("获取角色列表")
     public TableDataInfo list(Role role) {
         startPage();
         List<Role> list = roleService.selectRoleList(role);
@@ -60,6 +65,7 @@ public class RoleController extends BaseController {
     @RequiresPermissions("system:role:export")
     @PostMapping("/export")
     @ResponseBody
+    @ApiOperation("导出角色信息")
     public AjaxResult export(Role role) {
         List<Role> list = roleService.selectRoleList(role);
         ExcelUtil<Role> util = new ExcelUtil<Role>(Role.class);
@@ -70,6 +76,7 @@ public class RoleController extends BaseController {
      * 新增角色
      */
     @GetMapping("/add")
+    @ApiOperation("获取新增角色页面")
     public String add() {
         return prefix + "/add";
     }
@@ -81,6 +88,7 @@ public class RoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
+    @ApiOperation("新增并保存角色")
     public AjaxResult addSave(@Validated Role role) {
         if (!roleService.checkRoleNameUnique(role)) {
             return error("新增角色'" + role.getRoleName() + "'失败，角色名称已存在");
@@ -98,6 +106,7 @@ public class RoleController extends BaseController {
      */
     @RequiresPermissions("system:role:edit")
     @GetMapping("/edit/{roleId}")
+    @ApiOperation("获取修改角色页面")
     public String edit(@PathVariable("roleId") Long roleId, ModelMap mmap) {
         roleService.checkRoleDataScope(roleId);
         mmap.put("role", roleService.selectRoleById(roleId));
@@ -111,6 +120,7 @@ public class RoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
+    @ApiOperation("修改并保存角色")
     public AjaxResult editSave(@Validated Role role) {
         roleService.checkRoleAllowed(role);
         roleService.checkRoleDataScope(role.getRoleId());
@@ -128,6 +138,7 @@ public class RoleController extends BaseController {
      * 角色分配数据权限
      */
     @GetMapping("/authDataScope/{roleId}")
+    @ApiOperation("获取分配角色数据权限页面")
     public String authDataScope(@PathVariable("roleId") Long roleId, ModelMap mmap) {
         mmap.put("role", roleService.selectRoleById(roleId));
         return prefix + "/dataScope";
@@ -140,6 +151,7 @@ public class RoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PostMapping("/authDataScope")
     @ResponseBody
+    @ApiOperation("修改并保存角色数据权限")
     public AjaxResult authDataScopeSave(Role role) {
         roleService.checkRoleAllowed(role);
         roleService.checkRoleDataScope(role.getRoleId());
@@ -155,6 +167,7 @@ public class RoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
+    @ApiOperation("删除角色")
     public AjaxResult remove(String ids) {
         return toAjax(roleService.deleteRoleByIds(ids));
     }
@@ -164,6 +177,7 @@ public class RoleController extends BaseController {
      */
     @PostMapping("/checkRoleNameUnique")
     @ResponseBody
+    @ApiOperation("校验角色名称")
     public boolean checkRoleNameUnique(Role role) {
         return roleService.checkRoleNameUnique(role);
     }
@@ -173,14 +187,16 @@ public class RoleController extends BaseController {
      */
     @PostMapping("/checkRoleKeyUnique")
     @ResponseBody
+    @ApiOperation("校验角色权限")
     public boolean checkRoleKeyUnique(Role role) {
         return roleService.checkRoleKeyUnique(role);
     }
 
     /**
-     * 选择菜单树
+     * 选择角色树
      */
     @GetMapping("/selectMenuTree")
+    @ApiOperation("获取角色树")
     public String selectMenuTree() {
         return prefix + "/tree";
     }
@@ -192,6 +208,7 @@ public class RoleController extends BaseController {
     @RequiresPermissions("system:role:edit")
     @PostMapping("/changeStatus")
     @ResponseBody
+    @ApiOperation("修改角色状态")
     public AjaxResult changeStatus(Role role) {
         try {
             roleService.checkRoleAllowed(role);
@@ -207,6 +224,7 @@ public class RoleController extends BaseController {
      */
     @RequiresPermissions("system:role:edit")
     @GetMapping("/authUser/{roleId}")
+    @ApiOperation("获取分配用户页面")
     public String authUser(@PathVariable("roleId") Long roleId, ModelMap mmap) {
         mmap.put("role", roleService.selectRoleById(roleId));
         return prefix + "/authUser";
@@ -218,6 +236,7 @@ public class RoleController extends BaseController {
     @RequiresPermissions("system:role:list")
     @PostMapping("/authUser/allocatedList")
     @ResponseBody
+    @ApiOperation("获取已分配用户角色列表")
     public TableDataInfo allocatedList(User user) {
         startPage();
         List<User> list = userService.selectAllocatedList(user);
@@ -231,6 +250,7 @@ public class RoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PostMapping("/authUser/cancel")
     @ResponseBody
+    @ApiOperation("取消角色授权")
     public AjaxResult cancelAuthUser(UserRole userRole) {
         return toAjax(roleService.deleteAuthUser(userRole));
     }
@@ -242,6 +262,7 @@ public class RoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PostMapping("/authUser/cancelAll")
     @ResponseBody
+    @ApiOperation("批量取消角色授权")
     public AjaxResult cancelAuthUserAll(Long roleId, String userIds) {
         return toAjax(roleService.deleteAuthUsers(roleId, userIds));
     }
@@ -250,6 +271,7 @@ public class RoleController extends BaseController {
      * 选择用户
      */
     @GetMapping("/authUser/selectUser/{roleId}")
+    @ApiOperation("获取选择用户页面")
     public String selectUser(@PathVariable("roleId") Long roleId, ModelMap mmap) {
         mmap.put("role", roleService.selectRoleById(roleId));
         return prefix + "/selectUser";
@@ -261,6 +283,7 @@ public class RoleController extends BaseController {
     @RequiresPermissions("system:role:list")
     @PostMapping("/authUser/unallocatedList")
     @ResponseBody
+    @ApiOperation("获取为分配用户角色列表")
     public TableDataInfo unallocatedList(User user) {
         startPage();
         List<User> list = userService.selectUnallocatedList(user);
@@ -274,6 +297,7 @@ public class RoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PostMapping("/authUser/selectAll")
     @ResponseBody
+    @ApiOperation("批量选择用户授权")
     public AjaxResult selectAuthUserAll(Long roleId, String userIds) {
         roleService.checkRoleDataScope(roleId);
         return toAjax(roleService.insertAuthUsers(roleId, userIds));
@@ -285,6 +309,7 @@ public class RoleController extends BaseController {
     @RequiresPermissions("system:role:edit")
     @GetMapping("/deptTreeData")
     @ResponseBody
+    @ApiOperation("获取角色树")
     public List<Ztree> deptTreeData(Role role) {
         List<Ztree> ztrees = deptService.roleDeptTreeData(role);
         return ztrees;

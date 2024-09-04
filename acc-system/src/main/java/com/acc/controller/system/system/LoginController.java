@@ -12,13 +12,10 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @Slf4j
-@Api(tags = "登录接口")
+@Api(tags = "登录")
 public class LoginController extends BaseController {
 
     /**
@@ -39,8 +36,8 @@ public class LoginController extends BaseController {
     @Value("${shiro.rememberMe.enabled}")
     private boolean rememberMe;
 
-    @ApiOperation("管理端获取登录页面")
     @GetMapping("/login")
+    @ApiOperation("管理端获取登录页面")
     public String login(HttpServletRequest request, HttpServletResponse response, ModelMap mmap) {
         log.info("接收到登录请求");
 
@@ -53,20 +50,9 @@ public class LoginController extends BaseController {
         return "login";
     }
 
-    @ApiOperation("手机端登录")
-    @GetMapping("/android/login")
-    public ResponseEntity<?> getWorkOrder(@RequestParam String username, @RequestParam String password) {
-        System.out.println("1111");
-        System.out.println("username : " + username);
-        System.out.println("password : " + password);
-        if (username.equals("admin") && password.equals("admin")) {
-            return new ResponseEntity<>("success", HttpStatus.OK);
-        } else return new ResponseEntity<>("fail", HttpStatus.FORBIDDEN);
-    }
-
-    @ApiOperation("管理端登录")
     @PostMapping("/login")
     @ResponseBody
+    @ApiOperation("管理端登录")
     public AjaxResult ajaxLogin(String username, String password, Boolean rememberMe) {
         log.info("开始登录，用户名：{}", username);
 
@@ -84,8 +70,8 @@ public class LoginController extends BaseController {
         }
     }
 
-    @ApiOperation("无权限跳转页面")
     @GetMapping("/unauth")
+    @ApiOperation("无权限跳转页面")
     public String unauth() {
         return "error/unauth";
     }

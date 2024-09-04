@@ -12,6 +12,8 @@ import com.acc.core.session.OnlineSessionDAO;
 import com.acc.core.text.Convert;
 import com.acc.core.utils.ShiroUtils;
 import com.acc.service.UserOnlineService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/monitor/online")
+@Api(tags = "在线用户监控")
 public class UserOnlineController extends BaseController {
     private String prefix = "monitor/online";
 
@@ -38,7 +41,8 @@ public class UserOnlineController extends BaseController {
     private OnlineSessionDAO onlineSessionDAO;
 
     @RequiresPermissions("monitor:online:view")
-    @GetMapping()
+    @GetMapping
+    @ApiOperation("获取在线用户监控页面")
     public String online() {
         return prefix + "/online";
     }
@@ -46,6 +50,7 @@ public class UserOnlineController extends BaseController {
     @RequiresPermissions("monitor:online:list")
     @PostMapping("/list")
     @ResponseBody
+    @ApiOperation("获取在线用户列表")
     public TableDataInfo list(UserOnline userOnline) {
         startPage();
         List<UserOnline> list = userOnlineService.selectUserOnlineList(userOnline);
@@ -56,6 +61,7 @@ public class UserOnlineController extends BaseController {
     @Log(title = "在线用户", businessType = BusinessType.FORCE)
     @PostMapping("/batchForceLogout")
     @ResponseBody
+    @ApiOperation("批量强退在线用户")
     public AjaxResult batchForceLogout(String ids) {
         for (String sessionId : Convert.toStrArray(ids)) {
             UserOnline online = userOnlineService.selectOnlineById(sessionId);

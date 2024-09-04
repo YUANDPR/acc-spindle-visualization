@@ -9,6 +9,7 @@ import com.acc.core.utils.AuthorizationUtils;
 import com.acc.core.utils.ShiroUtils;
 import com.acc.service.MenuService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ import java.util.List;
 /**
  * 菜单信息
  */
-@Api(tags = "菜单接口")
 @Controller
 @Slf4j
 @RequestMapping("/system/menu")
+@Api(tags = "菜单")
 public class MenuController extends BaseController {
 
     private String prefix = "system/menu";
@@ -35,6 +36,7 @@ public class MenuController extends BaseController {
 
     @RequiresPermissions("system:menu:view")
     @GetMapping
+    @ApiOperation("获取菜单页面")
     public String menu() {
         return prefix + "/menu";
     }
@@ -42,6 +44,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("system:menu:list")
     @PostMapping("/list")
     @ResponseBody
+    @ApiOperation("获取菜单列表")
     public List<Menu> list(Menu menu) {
         Long userId = ShiroUtils.getUserId();
         List<Menu> menuList = menuService.selectMenuList(menu, userId);
@@ -54,6 +57,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("system:menu:remove")
     @GetMapping("/remove/{menuId}")
     @ResponseBody
+    @ApiOperation("删除菜单")
     public AjaxResult remove(@PathVariable("menuId") Long menuId) {
         if (menuService.selectCountMenuByParentId(menuId) > 0) {
             return AjaxResult.warn("存在子菜单,不允许删除");
@@ -69,6 +73,7 @@ public class MenuController extends BaseController {
      * 新增
      */
     @GetMapping("/add/{parentId}")
+    @ApiOperation("获取新增菜单页面")
     public String add(@PathVariable("parentId") Long parentId, ModelMap mmap) {
         Menu menu = null;
         if (0L != parentId) {
@@ -88,6 +93,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("system:menu:add")
     @PostMapping("/add")
     @ResponseBody
+    @ApiOperation("新增并保存菜单")
     public AjaxResult addSave(@Validated Menu menu) {
         if (!menuService.checkMenuNameUnique(menu)) {
             return error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
@@ -102,6 +108,7 @@ public class MenuController extends BaseController {
      */
     @RequiresPermissions("system:menu:edit")
     @GetMapping("/edit/{menuId}")
+    @ApiOperation("获取修改菜单页面")
     public String edit(@PathVariable("menuId") Long menuId, ModelMap mmap) {
         mmap.put("menu", menuService.selectMenuById(menuId));
         return prefix + "/edit";
@@ -113,6 +120,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("system:menu:edit")
     @PostMapping("/edit")
     @ResponseBody
+    @ApiOperation("修改并保存菜单")
     public AjaxResult editSave(@Validated Menu menu) {
         if (!menuService.checkMenuNameUnique(menu)) {
             return error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
@@ -126,6 +134,7 @@ public class MenuController extends BaseController {
      * 选择菜单图标
      */
     @GetMapping("/icon")
+    @ApiOperation("获取菜单图标")
     public String icon() {
         return prefix + "/icon";
     }
@@ -135,6 +144,7 @@ public class MenuController extends BaseController {
      */
     @PostMapping("/checkMenuNameUnique")
     @ResponseBody
+    @ApiOperation("校验菜单名称")
     public boolean checkMenuNameUnique(Menu menu) {
         return menuService.checkMenuNameUnique(menu);
     }
@@ -144,6 +154,7 @@ public class MenuController extends BaseController {
      */
     @GetMapping("/roleMenuTreeData")
     @ResponseBody
+    @ApiOperation("加载某角色菜单树")
     public List<Ztree> roleMenuTreeData(Role role) {
         Long userId = ShiroUtils.getUserId();
         List<Ztree> ztrees = menuService.roleMenuTreeData(role, userId);
@@ -155,6 +166,7 @@ public class MenuController extends BaseController {
      */
     @GetMapping("/menuTreeData")
     @ResponseBody
+    @ApiOperation("加载所有菜单树")
     public List<Ztree> menuTreeData() {
         Long userId = ShiroUtils.getUserId();
         List<Ztree> ztrees = menuService.menuTreeData(userId);
@@ -165,6 +177,7 @@ public class MenuController extends BaseController {
      * 选择菜单树
      */
     @GetMapping("/selectMenuTree/{menuId}")
+    @ApiOperation("选择菜单树")
     public String selectMenuTree(@PathVariable("menuId") Long menuId, ModelMap mmap) {
         mmap.put("menu", menuService.selectMenuById(menuId));
         return prefix + "/tree";

@@ -26,7 +26,7 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/captcha")
 @Slf4j
-@Api(tags = "验证码接口")
+@Api(tags = "验证码")
 public class CaptchaController extends BaseController {
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
@@ -37,8 +37,8 @@ public class CaptchaController extends BaseController {
     /**
      * 验证码生成
      */
-    @ApiOperation("验证码生成")
     @GetMapping(value = "/captchaImage")
+    @ApiOperation("验证码生成")
     public ModelAndView getKaptchaImage(HttpServletRequest request, HttpServletResponse response) {
         log.info("接收到验证码请求：type = {}", request.getParameter("type"));
 
