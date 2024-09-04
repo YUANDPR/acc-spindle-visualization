@@ -299,9 +299,15 @@ public class UserController extends BaseController {
     @ResponseBody
     @ApiOperation("修改用户状态")
     public AjaxResult changeStatus(User user) {
-        userService.checkUserAllowed(user);
-        userService.checkUserDataScope(user.getUserId());
-        return toAjax(userService.changeStatus(user));
+        int rows = 0;
+        try {
+            userService.checkUserAllowed(user);
+            userService.checkUserDataScope(user.getUserId());
+            rows = userService.changeStatus(user);
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
+        return toAjax(rows);
     }
 
     /**

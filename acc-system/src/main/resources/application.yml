@@ -128,7 +128,7 @@ logging:
 # mybatis
 mybatis:
   #mapper配置文件
-  mapperLocations: classpath:mapper/*.xml
+  mapperLocations: classpath*:mapper/*.xml
   # 搜索指定包别名
   typeAliasesPackage: com.acc.core.entity
   # 加载全局的配置文件

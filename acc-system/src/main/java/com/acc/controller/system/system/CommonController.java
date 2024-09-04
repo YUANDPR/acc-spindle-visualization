@@ -3,10 +3,16 @@ package com.acc.controller.system.system;
 import com.acc.core.config.AccConfig;
 import com.acc.core.config.ServerConfig;
 import com.acc.core.constant.Constants;
+import com.acc.core.entity.WorkOrder;
 import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.StringUtils;
 import com.acc.core.utils.file.FileUploadUtils;
 import com.acc.core.utils.file.FileUtils;
+import com.acc.mapper.WorkOrderMapper;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.read.listener.ReadListener;
+import com.alibaba.excel.util.ListUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +41,9 @@ public class CommonController {
     private static final String FILE_DELIMETER = ",";
     @Autowired
     private ServerConfig serverConfig;
+
+    @Autowired
+    private WorkOrderMapper workOrderMapper;
 
     /**
      * 通用下载请求
@@ -76,6 +85,43 @@ public class CommonController {
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
+            String readPath = filePath + fileName.substring(15);
+            String extension = fileName.substring(fileName.lastIndexOf("."));
+            // 如果上传的是excel文件，读取数据并存储到数据库
+            if (extension.equals(".xlsx")){
+                EasyExcel.read(readPath, WorkOrder.class, new ReadListener<WorkOrder>() {
+                    /**
+                     * 单次缓存的数据量
+                     */
+                    public static final int BATCH_COUNT = 100;
+                    /**
+                     *临时存储
+                     */
+                    private List<WorkOrder> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+
+                    @Override
+                    public void invoke(WorkOrder data, AnalysisContext context) {
+                        cachedDataList.add(data);
+                        if (cachedDataList.size() >= BATCH_COUNT) {
+                            saveData(cachedDataList);
+                            // 存储完成清理 list
+                            cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+                        }
+                    }
+
+                    @Override
+                    public void doAfterAllAnalysed(AnalysisContext context) {
+                        saveData(cachedDataList);
+                    }
+
+                    /**
+                     * 加上存储数据库
+                     */
+                    private void saveData(List<WorkOrder> workOrders) {
+                        workOrderMapper.insertBatch(workOrders);
+                    }
+                }).sheet().doRead();
+            }
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
             ajax.put("fileName", fileName);
@@ -83,6 +129,7 @@ public class CommonController {
             ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
         } catch (Exception e) {
+            log.info(e.getMessage());
             return AjaxResult.error(e.getMessage());
         }
     }
@@ -117,6 +164,7 @@ public class CommonController {
             ajax.put("originalFilenames", StringUtils.join(originalFilenames, FILE_DELIMETER));
             return ajax;
         } catch (Exception e) {
+            log.info(e.getMessage());
             return AjaxResult.error(e.getMessage());
         }
     }

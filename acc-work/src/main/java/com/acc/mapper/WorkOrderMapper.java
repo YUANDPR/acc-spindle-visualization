@@ -17,6 +17,8 @@ public interface WorkOrderMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertWorkOrder(WorkOrder workOrder);
 
+    void insertBatch(List<WorkOrder> workOrders);
+
     @Update("UPDATE work_order SET " +
             "order_id = #{orderId}, " +
             "material_id = #{materialId}, " +

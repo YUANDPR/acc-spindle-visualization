@@ -1,4 +1,4 @@
-package com.acc.controller.system.system;
+package com.acc.controller.system.tool;
 
 import com.acc.controller.system.BaseController;
 import io.swagger.annotations.Api;
@@ -9,17 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * knife4j接口
+ * 工单文件处理接口
  */
 @Controller
-@RequestMapping("/tool/swagger")
-@Api(tags = "knife4j")
-public class Knife4jController extends BaseController {
+@RequestMapping("/tool/order")
+@Api(tags = "工单文件处理")
+public class OrderFileController extends BaseController {
+    private String prefix = "work/order";
 
-    @RequiresPermissions("tool:swagger:view")
+    @RequiresPermissions("tool:order:view")
     @GetMapping
-    @ApiOperation("获取接口文档页面")
+    @ApiOperation("获取工单文件上传页面")
     public String index() {
-        return redirect("/doc.html");
+        return prefix + "/upload";
     }
 }
