@@ -4,6 +4,7 @@ package com.acc.core.entity;
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
+@ToString
 public class WorkOrder implements Serializable {
 
     private int id;

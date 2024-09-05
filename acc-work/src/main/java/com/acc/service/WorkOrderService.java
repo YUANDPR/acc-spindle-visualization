@@ -1,4 +1,4 @@
-package com.acc.mapper;
+package com.acc.service;
 
 import com.acc.core.entity.WorkOrder;
 
@@ -6,9 +6,9 @@ import java.util.List;
 
 
 /**
- * 生产工单Mapper接口
+ * 生产工单Service接口
  */
-public interface WorkOrderMapper {
+public interface WorkOrderService {
     /**
      * 查询生产工单
      *
@@ -42,18 +42,18 @@ public interface WorkOrderMapper {
      int updateWorkOrder(WorkOrder workOrder);
 
     /**
-     * 删除生产工单
+     * 批量删除生产工单
+     *
+     * @param ids 需要删除的生产工单主键集合
+     * @return 结果
+     */
+     int deleteWorkOrderByIds(String ids);
+
+    /**
+     * 删除生产工单信息
      *
      * @param id 生产工单主键
      * @return 结果
      */
      int deleteWorkOrderById(Long id);
-
-    /**
-     * 批量删除生产工单
-     *
-     * @param ids 需要删除的数据主键集合
-     * @return 结果
-     */
-     int deleteWorkOrderByIds(String[] ids);
 }

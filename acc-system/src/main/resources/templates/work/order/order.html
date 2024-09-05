@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('生产工单列表')"/>
+    <style>
+        .select-list {
+            display: flex;
+            flex-wrap: wrap; /* 允许项目换行 */
+            justify-content: flex-start; /* 左对齐 */
+        }
+        .select-list li {
+            display: flex;
+            align-items: center; /* 垂直居中对齐 */
+            margin-bottom: 10px;
+            flex-basis: 100%; /* 初始占据100%宽度，当空间足够时可并排 */
+        }
+        .select-list input[type="text"] {
+            margin-left: 10px; /* 标签与输入框之间留有间距 */
+            flex: 1; /* 输入框尽可能占据剩余空间 */
+        }
+        .select-list .time-input {
+            width: auto; /* 自动宽度 */
+        }
+        .select-list .btn {
+            margin-right: 5px;
+        }
+        @media (min-width: 500px) { /* 当屏幕宽度大于等于500px时 */
+            .select-list li {
+                flex-basis: 48%; /* 每行两个项目，留出一些间隔 */
+            }
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                                    <li>
+                                        <label>生产工单：</label>
+                                        <input type="text" name="orderId"/>
+                                    </li>
+                                    <li>
+                                        <label>物料号：</label>
+                                        <input type="text" name="materialId"/>
+                                    </li>
+                                    <li>
+                                        <label>物料描述：</label>
+                                        <input type="text" name="description"/>
+                                    </li>
+                                    <li>
+                                        <label>订单数量：</label>
+                                        <input type="text" name="orderQuantity"/>
+                                    </li>
+                                    <li>
+                                        <label>开始时间：</label>
+                                        <input type="text" class="time-input" placeholder="请选择开始时间"
+                                               name="startTime"/>
+                                    </li>
+                                    <li>
+                                        <label>结束时间：</label>
+                                        <input type="text" class="time-input" placeholder="请选择结束时间"
+                                               name="finishTime"/>
+                                    </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:order:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+               shiro:hasPermission="system:order:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="system:order:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:order:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:order:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:order:remove')}]];
+    var prefix = ctx + "system/order";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "生产工单",
+            columns: [{
+                checkbox: true
+            },
+                        {
+                            field: 'id',
+                            title: '主键',
+                            visible: false
+                        },
+                        {
+                            field: 'orderId',
+                            title: '生产工单号'
+                        },
+                        {
+                            field: 'materialId',
+                            title: '物料号'
+                        },
+                        {
+                            field: 'description',
+                            title: '物料描述'
+                        },
+                        {
+                            field: 'orderQuantity',
+                            title: '订单数量'
+                        },
+                        {
+                            field: 'startTime',
+                            title: '开始时间'
+                        },
+                        {
+                            field: 'finishTime',
+                            title: '结束时间'
+                        },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

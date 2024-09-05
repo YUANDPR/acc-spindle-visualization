@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改生产工单')"/>
+            <th:block th:include="include :: datetimepicker-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+<form class="form-horizontal m" id="form-order-edit" th:object="${workOrder}">
+    <input name="id" th:field="*{id}" type="hidden">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">生产工单号
+                                ：</label>
+                            <div class="col-sm-8">
+                                <input name="orderId" th:field="*{orderId}" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">物料号
+                                ：</label>
+                            <div class="col-sm-8">
+                                <input name="materialId" th:field="*{materialId}" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">物料描述
+                                ：</label>
+                            <div class="col-sm-8">
+                                <input name="description" th:field="*{description}" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单数量
+                                ：</label>
+                            <div class="col-sm-8">
+                                <input name="orderQuantity" th:field="*{orderQuantity}" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">开始时间
+                            ：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group date">
+                                <input name="startTime" th:value="${#dates.format(workOrder.startTime, 'yyyy-MM-dd')}"
+                                       class="form-control" placeholder="yyyy-MM-dd" type="text">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">结束时间
+                            ：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group date">
+                                <input name="finishTime" th:value="${#dates.format(workOrder.finishTime, 'yyyy-MM-dd')}"
+                                       class="form-control" placeholder="yyyy-MM-dd" type="text">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+</form>
+</div>
+<th:block th:include="include :: footer"/>
+        <th:block th:include="include :: datetimepicker-js"/>
+<script th:inline="javascript">
+    var prefix = ctx + "system/order";
+    $("#form-order-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-order-edit').serialize());
+        }
+    }
+
+            $("input[name='startTime']").datetimepicker({
+                format: "yyyy-mm-dd",
+                minView: "month",
+                autoclose: true
+            });
+
+            $("input[name='finishTime']").datetimepicker({
+                format: "yyyy-mm-dd",
+                minView: "month",
+                autoclose: true
+            });
+</script>
+</body>
+</html>

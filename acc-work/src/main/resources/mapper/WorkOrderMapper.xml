@@ -2,13 +2,118 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.acc.mapper.WorkOrderMapper">
 
+    <resultMap type="WorkOrder" id="WorkOrderResult">
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="materialId" column="material_id"/>
+        <result property="description" column="description"/>
+        <result property="orderQuantity" column="order_quantity"/>
+        <result property="startTime" column="start_time"/>
+        <result property="finishTime" column="finish_time"/>
+    </resultMap>
 
-    <update id="insertBatch">
-        replace into work_order (order_id, material_id, description, order_quantity, start_time, finish_time)
-        values
-        <foreach collection="workOrders" item="w" separator=",">
-            (#{w.orderId}, #{w.materialId}, #{w.description}, #{w.orderQuantity},
-            #{w.startTime}, #{w.finishTime})
-        </foreach>
+    <sql id="selectWorkOrderVo">
+        select id, order_id, material_id, description, order_quantity, start_time, finish_time
+        from work_order
+    </sql>
+
+    <select id="selectWorkOrderList" parameterType="WorkOrder" resultMap="WorkOrderResult">
+        <include refid="selectWorkOrderVo"/>
+        <where>
+            <if test="orderId != null ">
+                and order_id = #{orderId}
+            </if>
+            <if test="materialId != null  and materialId != ''">
+                and material_id = #{materialId}
+            </if>
+            <if test="description != null  and description != ''">
+                and description = #{description}
+            </if>
+            <if test="orderQuantity != null ">
+                and order_quantity = #{orderQuantity}
+            </if>
+            <if test="startTime != null ">
+                and start_time = #{startTime}
+            </if>
+            <if test="finishTime != null ">
+                and finish_time = #{finishTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWorkOrderById" parameterType="Long"
+            resultMap="WorkOrderResult">
+        <include refid="selectWorkOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWorkOrder" parameterType="WorkOrder" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into work_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,
+            </if>
+            <if test="materialId != null">material_id,
+            </if>
+            <if test="description != null">description,
+            </if>
+            <if test="orderQuantity != null">order_quantity,
+            </if>
+            <if test="startTime != null">start_time,
+            </if>
+            <if test="finishTime != null">finish_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},
+            </if>
+            <if test="materialId != null">#{materialId},
+            </if>
+            <if test="description != null">#{description},
+            </if>
+            <if test="orderQuantity != null">#{orderQuantity},
+            </if>
+            <if test="startTime != null">#{startTime},
+            </if>
+            <if test="finishTime != null">#{finishTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWorkOrder" parameterType="WorkOrder">
+        update work_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id =
+                #{orderId},
+            </if>
+            <if test="materialId != null">material_id =
+                #{materialId},
+            </if>
+            <if test="description != null">description =
+                #{description},
+            </if>
+            <if test="orderQuantity != null">order_quantity =
+                #{orderQuantity},
+            </if>
+            <if test="startTime != null">start_time =
+                #{startTime},
+            </if>
+            <if test="finishTime != null">finish_time =
+                #{finishTime},
+            </if>
+        </trim>
+        where id = #{id}
     </update>
+
+    <delete id="deleteWorkOrderById" parameterType="Long">
+        delete from work_order where id = #{id}
+    </delete>
+
+    <delete id="deleteWorkOrderByIds" parameterType="String">
+        delete from work_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

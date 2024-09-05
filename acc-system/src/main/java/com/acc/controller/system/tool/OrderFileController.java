@@ -8,7 +8,7 @@ import com.acc.core.exception.file.NonWorkOrderFileException;
 import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.file.FileUploadUtils;
 import com.acc.core.utils.file.FileUtils;
-import com.acc.mapper.WorkOrderMapper;
+import com.acc.mapper.OrderMapper;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -45,7 +45,7 @@ public class OrderFileController extends BaseController {
     private ServerConfig serverConfig;
 
     @Autowired
-    private WorkOrderMapper workOrderMapper;
+    private OrderMapper workOrderMapper;
 
     @RequiresPermissions("tool:work:view")
     @GetMapping

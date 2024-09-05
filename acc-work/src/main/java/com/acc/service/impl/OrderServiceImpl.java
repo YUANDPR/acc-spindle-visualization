@@ -8,7 +8,7 @@ import com.acc.core.entity.WorkRecord;
 import com.acc.core.exception.IllegalOrderCorrespondingQuantityException;
 import com.acc.core.exception.OrderNotFoundException;
 import com.acc.mapper.ExecutingOrderMapper;
-import com.acc.mapper.WorkOrderMapper;
+import com.acc.mapper.OrderMapper;
 import com.acc.mapper.WorkProcedureMapper;
 import com.acc.service.OrderService;
 import com.acc.service.RecordService;
@@ -33,10 +33,10 @@ public class OrderServiceImpl implements OrderService {
     private final RecordService recordService;
     private final WorkProcedureMapper workProcedureMapper;
     private final ExecutingOrderMapper executingOrderMapper;
-    private final WorkOrderMapper workOrderMapper;
+    private final OrderMapper workOrderMapper;
 
     @Autowired
-    OrderServiceImpl(WorkProcedureMapper workProcedureMapper, ExecutingOrderMapper executingOrderMapper, WorkOrderMapper workOrderMapper, RecordServiceImpl recordServiceImpl, RecordService recordService) {
+    OrderServiceImpl(WorkProcedureMapper workProcedureMapper, ExecutingOrderMapper executingOrderMapper, OrderMapper workOrderMapper, RecordServiceImpl recordServiceImpl, RecordService recordService) {
         this.workProcedureMapper = workProcedureMapper;
         this.executingOrderMapper = executingOrderMapper;
         this.workOrderMapper = workOrderMapper;
