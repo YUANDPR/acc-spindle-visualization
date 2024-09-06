@@ -106,7 +106,9 @@
     </update>
 
     <delete id="deleteWorkOrderById" parameterType="Long">
-        delete from work_order where id = #{id}
+        delete
+        from work_order
+        where id = #{id}
     </delete>
 
     <delete id="deleteWorkOrderByIds" parameterType="String">

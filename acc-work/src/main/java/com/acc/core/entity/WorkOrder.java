@@ -2,6 +2,8 @@ package com.acc.core.entity;
 
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,9 +33,13 @@ public class WorkOrder implements Serializable {
     @ExcelProperty("订单数量")
     private Integer orderQuantity;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ExcelProperty("基本开始")
+    @DateTimeFormat("yyyy-MM-dd")
     private Date startTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ExcelProperty("基本完成")
+    @DateTimeFormat("yyyy-MM-dd")
     private Date finishTime;
 }

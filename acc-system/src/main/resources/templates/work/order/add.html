@@ -2,77 +2,77 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="include :: header('新增生产工单')"/>
-            <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: datetimepicker-css"/>
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
     <form class="form-horizontal m" id="form-order-add">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">生产工单号
-                                    ：</label>
-                                <div class="col-sm-8">
-                                    <input name="orderId" class="form-control" type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">物料号
-                                    ：</label>
-                                <div class="col-sm-8">
-                                    <input name="materialId" class="form-control" type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">物料描述
-                                    ：</label>
-                                <div class="col-sm-8">
-                                    <input name="description" class="form-control" type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">订单数量
-                                    ：</label>
-                                <div class="col-sm-8">
-                                    <input name="orderQuantity" class="form-control" type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">开始时间
-                                    ：</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group date">
-                                        <input name="startTime" class="form-control" placeholder="yyyy-MM-dd"
-                                               type="text">
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">结束时间
-                                    ：</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group date">
-                                        <input name="finishTime" class="form-control" placeholder="yyyy-MM-dd"
-                                               type="text">
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">生产工单号
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="orderId" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">物料号
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="materialId" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">物料描述
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="description" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">订单数量
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="orderQuantity" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">开始时间
+                    ：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input class="form-control" name="startTime" placeholder="yyyy-MM-dd"
+                               type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">结束时间
+                    ：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input class="form-control" name="finishTime" placeholder="yyyy-MM-dd"
+                               type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 <th:block th:include="include :: footer"/>
-        <th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: datetimepicker-js"/>
 <script th:inline="javascript">
     var prefix = ctx + "system/order"
     $("#form-order-add").validate({
@@ -85,17 +85,17 @@
         }
     }
 
-            $("input[name='startTime']").datetimepicker({
-                format: "yyyy-mm-dd",
-                minView: "month",
-                autoclose: true
-            });
+    $("input[name='startTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
 
-            $("input[name='finishTime']").datetimepicker({
-                format: "yyyy-mm-dd",
-                minView: "month",
-                autoclose: true
-            });
+    $("input[name='finishTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
 </script>
 </body>
 </html>

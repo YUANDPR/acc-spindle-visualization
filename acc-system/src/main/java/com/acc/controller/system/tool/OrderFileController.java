@@ -85,7 +85,7 @@ public class OrderFileController extends BaseController {
             return AjaxResult.error(e.getMessage());
         }
     }
-    
+
     /**
      * 上传工序文件
      */
@@ -117,8 +117,8 @@ public class OrderFileController extends BaseController {
     }
 
     /**
-     *读取工序并存储工序信息
-     *todo 完成读取工序文件代码
+     * 读取工序并存储工序信息
+     * todo 完成读取工序文件代码
      */
     private void readProcessExcel(String readPath) {
     }
@@ -147,9 +147,9 @@ public class OrderFileController extends BaseController {
                 Map<Integer, String> integerStringMap = ConverterUtils.convertToStringMap(headMap, context);
                 Set<String> values = Set.of("订单", "物料", "物料描述", "基本开始", "基本完成");
                 // 校验表头是否含有特定的一些字段
-                if (!values.stream().allMatch(integerStringMap::containsValue)){
+                if (!values.stream().allMatch(integerStringMap::containsValue)) {
                     throw new NonWorkOrderFileException("上传文件非工单，请重新上传！");
-                }else {
+                } else {
                     isOrder = true;
                 }
             }

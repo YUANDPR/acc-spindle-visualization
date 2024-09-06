@@ -124,7 +124,7 @@ logging:
     com:
       acc:
         mapper: debug
-
+    org.springframework: WARN
 # mybatis
 mybatis:
   #mapper配置文件

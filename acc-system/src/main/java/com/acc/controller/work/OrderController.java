@@ -7,6 +7,7 @@ import com.acc.core.entity.WorkProcedure;
 import com.acc.core.exception.IllegalOrderCorrespondingQuantityException;
 import com.acc.core.exception.OrderNotFoundException;
 import com.acc.service.OrderService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/orders")
+@Api(tags = "工单处理")
 public class OrderController {
 
     private final static boolean DEBUG = false;

@@ -10,7 +10,7 @@
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-content" shiro:hasPermission="work:order:edit">
-                    <div class="form-group" >
+                    <div class="form-group">
                         <label class="font-bold">工单文件上传</label>
                         <div class="file-loading">
                             <input id="orderFile" name="file" type="file">
@@ -37,18 +37,20 @@
     $(document).ready(function () {
         // 工单上传
         $("#orderFile").fileinput({
+            language: 'zh',
             uploadUrl: ctx + 'tool/work/order',
             showPreview: true,
             maxFileCount: 1,
             autoReplace: true,
+            dropZoneTitle: '请将工单文件拖拽到这里',
             allowedFileExtensions: ['xls', 'xlsx'], // 允许上传的文件类型
-            msgInvalidFileType: "只能上传xls或xlsx文件", // 文件类型验证失败的消息
+            msgInvalidFileExtension: '只能上传xls或xlsx文件，请重新上传！', // 文件类型验证失败的消息
         }).on('fileuploaded', function (event, data, previewId, index) {
             var rsp = data.response;
             console.log(rsp)
-            if (rsp.msg === "操作成功" ){
+            if (rsp.msg === '操作成功') {
                 $.modal.alertSuccess("文件上传成功！");
-            }else {
+            } else {
                 $.modal.alertError(rsp.msg);
             }
             log.info("return url：" + rsp.url)
@@ -57,8 +59,8 @@
             log.info("return originalFilename：" + rsp.originalFilename)
         }).on('fileremoved', function (event, id, index) {
             $("input[name='" + event.currentTarget.id + "']").val('')
-        }).on('change', function(event) {
-            $.modal.alertWarning("上传文件后将直接修改数据库，请谨慎上传！");
+        }).on('change', function (event) {
+            $.modal.alertWarning("新工单将会覆盖旧工单，请谨慎上传！");
         })
 
         // 工序上传
@@ -67,14 +69,15 @@
             uploadUrl: ctx + 'tool/work/process',
             maxFileCount: 1,
             autoReplace: true,
+            dropZoneTitle: "请将工序文件拖拽到这里",
             allowedFileExtensions: ['xls', 'xlsx'], // 允许上传的文件类型
-            msgInvalidFileType: "只能上传xls或xlsx文件", // 文件类型验证失败的消息
+            msgInvalidFileExtension: '只能上传xls或xlsx文件，请重新上传！', // 文件类型验证失败的消息
         }).on('fileuploaded', function (event, data, previewId, index) {
             var rsp = data.response;
             console.log(rsp)
-            if (rsp.msg === "操作成功" ){
+            if (rsp.msg === "操作成功") {
                 $.modal.alertSuccess("文件上传成功！");
-            }else {
+            } else {
                 $.modal.alertError(rsp.msg);
             }
             log.info("return url：" + rsp.url)
@@ -83,8 +86,8 @@
             log.info("return originalFilename：" + rsp.originalFilename)
         }).on('fileremoved', function (event, id, index) {
             $("input[name='" + event.currentTarget.id + "']").val('')
-        }).on('change', function(event) {
-            $.modal.alertWarning("上传文件后将直接修改数据库，请谨慎上传！");
+        }).on('change', function (event) {
+            $.modal.alertWarning("新工序将会覆盖旧工序，请谨慎上传！");
         })
 
 

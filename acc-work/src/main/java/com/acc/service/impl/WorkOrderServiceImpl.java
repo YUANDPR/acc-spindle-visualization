@@ -47,7 +47,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
      */
     @Override
     public int insertWorkOrder(WorkOrder workOrder) {
-            return workOrderMapper.insertWorkOrder(workOrder);
+        return workOrderMapper.insertWorkOrder(workOrder);
     }
 
     /**

@@ -2,6 +2,8 @@ package com.acc.controller.work;
 
 import com.acc.core.entity.WorkRecord;
 import com.acc.service.RecordService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/records")
+@Api(tags = "加工数据记录")
 public class RecordController {
 
     private final RecordService recordService;
@@ -29,6 +32,7 @@ public class RecordController {
      * The response entity.
      */
     @PostMapping
+    @ApiOperation("添加新的工作记录")
     public ResponseEntity<String> addWorkRecord(@RequestBody WorkRecord workRecord) {
         recordService.addWorkRecord(workRecord);
         return ResponseEntity.ok("Record added successfully");
@@ -44,6 +48,7 @@ public class RecordController {
      * List of work records.
      */
     @GetMapping("/order/{orderId}")
+    @ApiOperation("根据工单号查询工作记录")
     public ResponseEntity<List<WorkRecord>> getRecordsByOrderId(@PathVariable int orderId) {
         List<WorkRecord> records = recordService.getWorkRecordsByOrderId(orderId);
         return ResponseEntity.ok(records);
@@ -59,6 +64,7 @@ public class RecordController {
      * List of work records.
      */
     @GetMapping("/operator/{operator}")
+    @ApiOperation("根据操作员查询工作记录")
     public ResponseEntity<List<WorkRecord>> getRecordsByOperator(@PathVariable String operator) {
         List<WorkRecord> records = recordService.getWorkRecordsByOperator(operator);
         return ResponseEntity.ok(records);
@@ -74,6 +80,7 @@ public class RecordController {
      * The response entity.
      */
     @DeleteMapping("/order/{orderId}")
+    @ApiOperation("根据工单号删除工作记录")
     public ResponseEntity<String> deleteRecordsByOrderId(@PathVariable int orderId) {
         recordService.deleteWorkRecordsByOrderId(orderId);
         return ResponseEntity.ok("Records deleted successfully");
@@ -89,6 +96,7 @@ public class RecordController {
      * The response entity.
      */
     @DeleteMapping("/{id}")
+    @ApiOperation("根据id删除工作记录")
     public ResponseEntity<String> deleteRecordById(@PathVariable int id) {
         recordService.deleteWorkRecordById(id);
         return ResponseEntity.ok("Record deleted successfully");
@@ -102,6 +110,7 @@ public class RecordController {
      * List of all work records.
      */
     @GetMapping
+    @ApiOperation("查询所有工作记录")
     public ResponseEntity<List<WorkRecord>> getAllRecords() {
         List<WorkRecord> records = recordService.getAllWorkRecords();
         return ResponseEntity.ok(records);

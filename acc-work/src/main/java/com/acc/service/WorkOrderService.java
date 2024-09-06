@@ -15,7 +15,7 @@ public interface WorkOrderService {
      * @param id 生产工单主键
      * @return 生产工单
      */
-     WorkOrder selectWorkOrderById(Long id);
+    WorkOrder selectWorkOrderById(Long id);
 
     /**
      * 查询生产工单列表
@@ -23,7 +23,7 @@ public interface WorkOrderService {
      * @param workOrder 生产工单
      * @return 生产工单集合
      */
-     List<WorkOrder> selectWorkOrderList(WorkOrder workOrder);
+    List<WorkOrder> selectWorkOrderList(WorkOrder workOrder);
 
     /**
      * 新增生产工单
@@ -31,7 +31,7 @@ public interface WorkOrderService {
      * @param workOrder 生产工单
      * @return 结果
      */
-     int insertWorkOrder(WorkOrder workOrder);
+    int insertWorkOrder(WorkOrder workOrder);
 
     /**
      * 修改生产工单
@@ -39,7 +39,7 @@ public interface WorkOrderService {
      * @param workOrder 生产工单
      * @return 结果
      */
-     int updateWorkOrder(WorkOrder workOrder);
+    int updateWorkOrder(WorkOrder workOrder);
 
     /**
      * 批量删除生产工单
@@ -47,7 +47,7 @@ public interface WorkOrderService {
      * @param ids 需要删除的生产工单主键集合
      * @return 结果
      */
-     int deleteWorkOrderByIds(String ids);
+    int deleteWorkOrderByIds(String ids);
 
     /**
      * 删除生产工单信息
@@ -55,5 +55,5 @@ public interface WorkOrderService {
      * @param id 生产工单主键
      * @return 结果
      */
-     int deleteWorkOrderById(Long id);
+    int deleteWorkOrderById(Long id);
 }

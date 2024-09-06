@@ -12,6 +12,7 @@ import com.acc.core.text.Convert;
 import com.acc.core.utils.file.FileTypeUtils;
 import com.acc.core.utils.file.FileUtils;
 import com.acc.core.utils.file.ImageUtils;
+import com.alibaba.excel.EasyExcel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RegExUtils;
@@ -1442,5 +1443,55 @@ public class ExcelUtil<T> {
             log.error("获取对象异常{}", e.getMessage());
         }
         return method;
+    }
+
+    /**
+     * 对excel表单默认第一个索引名转换成list（EasyExcel）
+     *
+     * @param is 输入流
+     * @return 转换后集合
+     */
+    public List<T> importEasyExcel(InputStream is) throws Exception {
+        return EasyExcel.read(is).head(clazz).sheet().doReadSync();
+    }
+
+    /**
+     * 对list数据源将其里面的数据导入到excel表单（EasyExcel）
+     *
+     * @param list      导出数据集合
+     * @param sheetName 工作表的名称
+     * @return 结果
+     */
+    public AjaxResult exportEasyExcel(List<T> list, String sheetName) {
+        String filename = encodingFilename(sheetName);
+        EasyExcel.write(getAbsoluteFile(filename), clazz).sheet(sheetName).doWrite(list);
+        return AjaxResult.success(filename);
+    }
+
+    /**
+     * 根据模板导出数据到excel表单（EasyExcel）
+     * @param list 导出的数据集合
+     * @param fileName 文件名
+     * @return 文件路径
+     */
+    public AjaxResult exportEasyExcelWithTemplate(List<T> list, String fileName, String templateName) {
+        String filename = encodingFilename(fileName);
+        String template = getAbsoluteTemplate(templateName);
+        EasyExcel.write(getAbsoluteFile(filename), clazz).withTemplate(template).sheet().doFill(list);
+        return AjaxResult.success(filename);
+    }
+
+    /**
+     * 获取Excel模板文件绝对路径
+     * @param templateName 模板文件名
+     * @return 模板文件绝对路径
+     */
+    private String getAbsoluteTemplate(String templateName) {
+        String templatePath = AccConfig.getExcelTemplatePath() + templateName;
+        File desc = new File(templatePath);
+        if (!desc.getParentFile().exists()) {
+            desc.getParentFile().mkdirs();
+        }
+        return templatePath;
     }
 }

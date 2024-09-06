@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="include :: header('生产工单列表')"/>
     <style>
@@ -8,23 +8,29 @@
             flex-wrap: wrap; /* 允许项目换行 */
             justify-content: flex-start; /* 左对齐 */
         }
+
         .select-list li {
             display: flex;
             align-items: center; /* 垂直居中对齐 */
             margin-bottom: 10px;
             flex-basis: 100%; /* 初始占据100%宽度，当空间足够时可并排 */
         }
+
         .select-list input[type="text"] {
             margin-left: 10px; /* 标签与输入框之间留有间距 */
             flex: 1; /* 输入框尽可能占据剩余空间 */
         }
+
         .select-list .time-input {
             width: auto; /* 自动宽度 */
         }
+
         .select-list .btn {
             margin-right: 5px;
         }
-        @media (min-width: 500px) { /* 当屏幕宽度大于等于500px时 */
+
+        @media (min-width: 500px) {
+            /* 当屏幕宽度大于等于500px时 */
             .select-list li {
                 flex-basis: 48%; /* 每行两个项目，留出一些间隔 */
             }
@@ -38,32 +44,32 @@
             <form id="formId">
                 <div class="select-list">
                     <ul>
-                                    <li>
-                                        <label>生产工单：</label>
-                                        <input type="text" name="orderId"/>
-                                    </li>
-                                    <li>
-                                        <label>物料号：</label>
-                                        <input type="text" name="materialId"/>
-                                    </li>
-                                    <li>
-                                        <label>物料描述：</label>
-                                        <input type="text" name="description"/>
-                                    </li>
-                                    <li>
-                                        <label>订单数量：</label>
-                                        <input type="text" name="orderQuantity"/>
-                                    </li>
-                                    <li>
-                                        <label>开始时间：</label>
-                                        <input type="text" class="time-input" placeholder="请选择开始时间"
-                                               name="startTime"/>
-                                    </li>
-                                    <li>
-                                        <label>结束时间：</label>
-                                        <input type="text" class="time-input" placeholder="请选择结束时间"
-                                               name="finishTime"/>
-                                    </li>
+                        <li>
+                            <label>生产工单：</label>
+                            <input name="orderId" type="text"/>
+                        </li>
+                        <li>
+                            <label>物料号：</label>
+                            <input name="materialId" type="text"/>
+                        </li>
+                        <li>
+                            <label>物料描述：</label>
+                            <input name="description" type="text"/>
+                        </li>
+                        <li>
+                            <label>订单数量：</label>
+                            <input name="orderQuantity" type="text"/>
+                        </li>
+                        <li>
+                            <label>开始时间：</label>
+                            <input class="time-input" name="startTime" placeholder="请选择开始时间"
+                                   type="text"/>
+                        </li>
+                        <li>
+                            <label>结束时间：</label>
+                            <input class="time-input" name="finishTime" placeholder="请选择结束时间"
+                                   type="text"/>
+                        </li>
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
@@ -114,35 +120,35 @@
             columns: [{
                 checkbox: true
             },
-                        {
-                            field: 'id',
-                            title: '主键',
-                            visible: false
-                        },
-                        {
-                            field: 'orderId',
-                            title: '生产工单号'
-                        },
-                        {
-                            field: 'materialId',
-                            title: '物料号'
-                        },
-                        {
-                            field: 'description',
-                            title: '物料描述'
-                        },
-                        {
-                            field: 'orderQuantity',
-                            title: '订单数量'
-                        },
-                        {
-                            field: 'startTime',
-                            title: '开始时间'
-                        },
-                        {
-                            field: 'finishTime',
-                            title: '结束时间'
-                        },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'orderId',
+                    title: '生产工单'
+                },
+                {
+                    field: 'materialId',
+                    title: '物料号'
+                },
+                {
+                    field: 'description',
+                    title: '物料描述'
+                },
+                {
+                    field: 'orderQuantity',
+                    title: '订单数量'
+                },
+                {
+                    field: 'startTime',
+                    title: '开始时间'
+                },
+                {
+                    field: 'finishTime',
+                    title: '结束时间'
+                },
                 {
                     title: '操作',
                     align: 'center',

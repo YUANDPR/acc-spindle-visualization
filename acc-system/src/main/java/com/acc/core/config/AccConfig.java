@@ -24,10 +24,6 @@ public class AccConfig {
      */
     private static String copyrightYear;
 
-    /**
-     * 实例演示开关
-     */
-    private static boolean demoEnabled;
 
     /**
      * 上传路径
@@ -61,14 +57,6 @@ public class AccConfig {
 
     public void setCopyrightYear(String copyrightYear) {
         AccConfig.copyrightYear = copyrightYear;
-    }
-
-    public static boolean isDemoEnabled() {
-        return demoEnabled;
-    }
-
-    public void setDemoEnabled(boolean demoEnabled) {
-        AccConfig.demoEnabled = demoEnabled;
     }
 
     public static String getProfile() {
@@ -106,6 +94,13 @@ public class AccConfig {
      */
     public static String getDownloadPath() {
         return getProfile() + "/download/";
+    }
+
+    /**
+     * 获取excel模板路径
+     */
+    public static String getExcelTemplatePath() {
+        return getProfile() + "/template/";
     }
 
     /**
