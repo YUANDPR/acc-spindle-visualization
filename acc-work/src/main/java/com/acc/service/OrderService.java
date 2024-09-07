@@ -45,4 +45,6 @@ public interface OrderService {
     void deleteWorkOrderById(int id);
 
     List<ExecutingOrder> getAllExecutingOrders() throws OrderNotFoundException;
+
+    WorkOrder getWorkOrderById(int id);
 }

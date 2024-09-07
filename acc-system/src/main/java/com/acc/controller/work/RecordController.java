@@ -1,5 +1,6 @@
 package com.acc.controller.work;
 
+import com.acc.core.annotation.Anonymous;
 import com.acc.core.entity.WorkRecord;
 import com.acc.service.RecordService;
 import io.swagger.annotations.Api;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/records")
 @Api(tags = "加工数据记录")
+@Anonymous
 public class RecordController {
 
     private final RecordService recordService;
@@ -31,6 +33,7 @@ public class RecordController {
      * @return 响应实体。
      * The response entity.
      */
+    @Anonymous
     @PostMapping
     @ApiOperation("添加新的工作记录")
     public ResponseEntity<String> addWorkRecord(@RequestBody WorkRecord workRecord) {
@@ -47,6 +50,7 @@ public class RecordController {
      * @return 工作记录列表。
      * List of work records.
      */
+    @Anonymous
     @GetMapping("/order/{orderId}")
     @ApiOperation("根据工单号查询工作记录")
     public ResponseEntity<List<WorkRecord>> getRecordsByOrderId(@PathVariable int orderId) {
@@ -63,6 +67,7 @@ public class RecordController {
      * @return 工作记录列表。
      * List of work records.
      */
+    @Anonymous
     @GetMapping("/operator/{operator}")
     @ApiOperation("根据操作员查询工作记录")
     public ResponseEntity<List<WorkRecord>> getRecordsByOperator(@PathVariable String operator) {
@@ -79,6 +84,7 @@ public class RecordController {
      * @return 响应实体。
      * The response entity.
      */
+    @Anonymous
     @DeleteMapping("/order/{orderId}")
     @ApiOperation("根据工单号删除工作记录")
     public ResponseEntity<String> deleteRecordsByOrderId(@PathVariable int orderId) {
@@ -109,6 +115,7 @@ public class RecordController {
      * @return 工作记录列表。
      * List of all work records.
      */
+    @Anonymous
     @GetMapping
     @ApiOperation("查询所有工作记录")
     public ResponseEntity<List<WorkRecord>> getAllRecords() {

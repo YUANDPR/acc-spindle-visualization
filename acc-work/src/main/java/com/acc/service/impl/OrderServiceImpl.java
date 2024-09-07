@@ -20,10 +20,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -122,6 +120,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ExecutingOrder build(WorkOrder order) {
         List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
+
+        // Use streams to filter out duplicate operationIds and retain the first occurrence of each
+        list = list.stream()
+                .collect(Collectors.toMap(
+                        WorkProcedure::getOperationId,  // Use operationId as the key
+                        procedure -> procedure,         // Keep the entire WorkProcedure as the value
+                        (first, second) -> first        // If a duplicate operationId is found, keep the first one
+                ))
+                .values()
+                .stream()
+                .sorted(Comparator.comparingInt(WorkProcedure::getOperationId))
+                .toList();      // Collect the filtered procedures back into a list
+
         ExecutingOrder executingOrder = new ExecutingOrder(order);
         executingOrder.setWaiting(new LinkedList<>(list));
         executingOrder.setDone(new ArrayList<>());
@@ -150,7 +161,19 @@ public class OrderServiceImpl implements OrderService {
     public List<WorkProcedure> getWorkProcedure(int orderId) throws OrderNotFoundException, IllegalOrderCorrespondingQuantityException {
         int id = getUniqueWorkOrderId(orderId);
         WorkOrder order = workOrderMapper.getById(id);
-        return workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
+        List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
+        // Use streams to filter out duplicate operationIds and retain the first occurrence of each
+        list = list.stream()
+                .collect(Collectors.toMap(
+                        WorkProcedure::getOperationId,  // Use operationId as the key
+                        procedure -> procedure,         // Keep the entire WorkProcedure as the value
+                        (first, second) -> first        // If a duplicate operationId is found, keep the first one
+                ))
+                .values()
+                .stream()
+                .sorted(Comparator.comparingInt(WorkProcedure::getOperationId))
+                .toList();      // Collect the filtered procedures back into a list
+        return list;
     }
 
     /**
@@ -183,6 +206,19 @@ public class OrderServiceImpl implements OrderService {
         else
             executingOrder.setStateUpdateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(dto.getUpdate_time()), ZoneId.systemDefault()));
         List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
+
+        // Use streams to filter out duplicate operationIds and retain the first occurrence of each
+        list = list.stream()
+                .collect(Collectors.toMap(
+                        WorkProcedure::getOperationId,  // Use operationId as the key
+                        procedure -> procedure,         // Keep the entire WorkProcedure as the value
+                        (first, second) -> first        // If a duplicate operationId is found, keep the first one
+                ))
+                .values()
+                .stream()
+                .sorted(Comparator.comparingInt(WorkProcedure::getOperationId))
+                .toList();      // Collect the filtered procedures back into a list
+
         Queue<WorkProcedure> waitingQueue = new LinkedList<>();
         List<WorkProcedure> done = new ArrayList<>();
         boolean flag = false;
@@ -319,6 +355,17 @@ public class OrderServiceImpl implements OrderService {
         return workOrderMapper.getById(workOrderId);
     }
 
+    /**
+     * Retrieves a WorkOrder by its ID in database
+     * 通过工单的数据库id检索工单
+     *
+     * @param id The order ID for the WorkOrder.
+     * @return The WorkOrder associated with the specified orderId.
+     */
+    @Override
+    public WorkOrder getWorkOrderById(int id) {
+        return workOrderMapper.getById(id);
+    }
 
     /**
      * Retrieves a ExecutingOrderDto by its order ID by first ensuring that exactly one WorkOrder exists for the given order ID.

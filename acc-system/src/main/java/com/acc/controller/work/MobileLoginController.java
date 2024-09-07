@@ -1,5 +1,6 @@
 package com.acc.controller.work;
 
+import com.acc.core.annotation.Anonymous;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class MobileLoginController {
     @GetMapping("/login")
     @ResponseBody
     @ApiOperation("移动端登录")
+    @Anonymous
     public ResponseEntity<?> getWorkOrder(@RequestParam String username, @RequestParam String password) {
         System.out.println("1111");
         System.out.println("username : " + username);
