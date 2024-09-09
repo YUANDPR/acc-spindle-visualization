@@ -1470,7 +1470,8 @@ public class ExcelUtil<T> {
 
     /**
      * 根据模板导出数据到excel表单（EasyExcel）
-     * @param list 导出的数据集合
+     *
+     * @param list     导出的数据集合
      * @param fileName 文件名
      * @return 文件路径
      */
@@ -1483,6 +1484,7 @@ public class ExcelUtil<T> {
 
     /**
      * 获取Excel模板文件绝对路径
+     *
      * @param templateName 模板文件名
      * @return 模板文件绝对路径
      */

@@ -1,10 +1,10 @@
 package com.acc.controller.work;
 
-import com.acc.core.annotation.Anonymous;
 import com.acc.core.entity.WorkRecord;
 import com.acc.service.RecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/records")
 @Api(tags = "加工数据记录")
-@Anonymous
 public class RecordController {
 
     private final RecordService recordService;
@@ -33,7 +32,7 @@ public class RecordController {
      * @return 响应实体。
      * The response entity.
      */
-    @Anonymous
+    @RequiresPermissions("work:record:add")
     @PostMapping
     @ApiOperation("添加新的工作记录")
     public ResponseEntity<String> addWorkRecord(@RequestBody WorkRecord workRecord) {
@@ -50,7 +49,7 @@ public class RecordController {
      * @return 工作记录列表。
      * List of work records.
      */
-    @Anonymous
+    @RequiresPermissions("work:record:get")
     @GetMapping("/order/{orderId}")
     @ApiOperation("根据工单号查询工作记录")
     public ResponseEntity<List<WorkRecord>> getRecordsByOrderId(@PathVariable int orderId) {
@@ -67,7 +66,7 @@ public class RecordController {
      * @return 工作记录列表。
      * List of work records.
      */
-    @Anonymous
+    @RequiresPermissions("work:record:get")
     @GetMapping("/operator/{operator}")
     @ApiOperation("根据操作员查询工作记录")
     public ResponseEntity<List<WorkRecord>> getRecordsByOperator(@PathVariable String operator) {
@@ -84,7 +83,7 @@ public class RecordController {
      * @return 响应实体。
      * The response entity.
      */
-    @Anonymous
+    @RequiresPermissions("work:record:delete")
     @DeleteMapping("/order/{orderId}")
     @ApiOperation("根据工单号删除工作记录")
     public ResponseEntity<String> deleteRecordsByOrderId(@PathVariable int orderId) {
@@ -101,6 +100,7 @@ public class RecordController {
      * @return 响应实体。
      * The response entity.
      */
+    @RequiresPermissions("work:record:delete")
     @DeleteMapping("/{id}")
     @ApiOperation("根据id删除工作记录")
     public ResponseEntity<String> deleteRecordById(@PathVariable int id) {
@@ -115,7 +115,7 @@ public class RecordController {
      * @return 工作记录列表。
      * List of all work records.
      */
-    @Anonymous
+    @RequiresPermissions("work:record:get")
     @GetMapping
     @ApiOperation("查询所有工作记录")
     public ResponseEntity<List<WorkRecord>> getAllRecords() {

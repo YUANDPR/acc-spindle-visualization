@@ -3,6 +3,6 @@ acc:
     driver-class-name: com.mysql.cj.jdbc.Driver
     host: localhost
     port: 3306
-    database: acc
+    database: acc_turbo_shell
     username: root
-    password: seed
+    password: 123456
