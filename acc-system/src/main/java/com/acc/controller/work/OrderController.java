@@ -1,6 +1,5 @@
 package com.acc.controller.work;
 
-import com.acc.core.annotation.Anonymous;
 import com.acc.core.dto.ExecutingOrderDto;
 import com.acc.core.entity.ExecutingOrder;
 import com.acc.core.entity.WorkOrder;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@SuppressWarnings("LoggingSimilarMessage")
 @Slf4j
 @RestController
 @RequestMapping("/orders")
@@ -60,7 +58,7 @@ public class OrderController {
             // 记录成功创建工单的日志信息
             log.info("Work order created successfully");
 
-            // 返回成功创建工单的响应及状态码
+            // 返回成功创建工单响应码及状态码
             return ResponseEntity.ok("Work order created successfully.");
         } catch (Exception e) {
             // 记录创建工单过程中的异常信息
@@ -139,7 +137,7 @@ public class OrderController {
         }
 
         // 记录工单成功获取的信息日志
-        log.info("Work order fetched successfully");
+        log.info("getWorkOrderById - Work order fetched successfully");
 
         // 返回包含工单信息的响应实体
         return ResponseEntity.ok(workOrder);
@@ -300,18 +298,18 @@ public class OrderController {
             List<ExecutingOrderDto> orders = orderService.getAllExecutingOrders().stream()
                     .map(orderService::serializeExecutingOrder).toList();
             if (orders.isEmpty()) {
-                log.info("No executing orders found");
+                log.info("getAllExecutingOrders - No executing orders found");
                 // 当没有找到正在执行的订单时，返回204 NO CONTENT响应
                 return ResponseEntity.noContent().build();
             }
             // 返回包含所有正在执行订单的响应实体
             return ResponseEntity.ok(orders);
         } catch (OrderNotFoundException e) {
-            log.error("Error fetching executing orders: {}", e.getMessage());
+            log.error("getAllExecutingOrders - Error fetching executing orders: {}", e.getMessage());
             // 当发生特定订单未找到异常时，返回404 NOT FOUND响应
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            log.error("Internal server error: {}", e.getMessage());
+            log.error("getAllExecutingOrders - Internal server error: {}", e.getMessage());
             // 当发生内部服务器错误时，返回500 INTERNAL SERVER ERROR响应
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
