@@ -119,19 +119,10 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ExecutingOrder build(WorkOrder order) {
-        List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
+        List<WorkProcedure> list;
 
         // Use streams to filter out duplicate operationIds and retain the first occurrence of each
-        list = list.stream()
-                .collect(Collectors.toMap(
-                        WorkProcedure::getOperationId,  // Use operationId as the key
-                        procedure -> procedure,         // Keep the entire WorkProcedure as the value
-                        (first, second) -> first        // If a duplicate operationId is found, keep the first one
-                ))
-                .values()
-                .stream()
-                .sorted(Comparator.comparingInt(WorkProcedure::getOperationId))
-                .toList();      // Collect the filtered procedures back into a list
+        list = getWorkProcedures(order);  // Collect the filtered procedures back into a list
 
         ExecutingOrder executingOrder = new ExecutingOrder(order);
         executingOrder.setWaiting(new LinkedList<>(list));
@@ -161,19 +152,7 @@ public class OrderServiceImpl implements OrderService {
     public List<WorkProcedure> getWorkProcedure(int orderId) throws OrderNotFoundException, IllegalOrderCorrespondingQuantityException {
         int id = getUniqueWorkOrderId(orderId);
         WorkOrder order = workOrderMapper.getById(id);
-        List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
-        // Use streams to filter out duplicate operationIds and retain the first occurrence of each
-        list = list.stream()
-                .collect(Collectors.toMap(
-                        WorkProcedure::getOperationId,  // Use operationId as the key
-                        procedure -> procedure,         // Keep the entire WorkProcedure as the value
-                        (first, second) -> first        // If a duplicate operationId is found, keep the first one
-                ))
-                .values()
-                .stream()
-                .sorted(Comparator.comparingInt(WorkProcedure::getOperationId))
-                .toList();      // Collect the filtered procedures back into a list
-        return list;
+        return getWorkProcedures(order);
     }
 
     /**
@@ -205,19 +184,7 @@ public class OrderServiceImpl implements OrderService {
         if (dto.getUpdate_time() == null) executingOrder.setStateUpdateTime(LocalDateTime.now());
         else
             executingOrder.setStateUpdateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(dto.getUpdate_time()), ZoneId.systemDefault()));
-        List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
-
-        // Use streams to filter out duplicate operationIds and retain the first occurrence of each
-        list = list.stream()
-                .collect(Collectors.toMap(
-                        WorkProcedure::getOperationId,  // Use operationId as the key
-                        procedure -> procedure,         // Keep the entire WorkProcedure as the value
-                        (first, second) -> first        // If a duplicate operationId is found, keep the first one
-                ))
-                .values()
-                .stream()
-                .sorted(Comparator.comparingInt(WorkProcedure::getOperationId))
-                .toList();      // Collect the filtered procedures back into a list
+        List<WorkProcedure> list = getWorkProcedures(order);
 
         Queue<WorkProcedure> waitingQueue = new LinkedList<>();
         List<WorkProcedure> done = new ArrayList<>();
@@ -257,6 +224,35 @@ public class OrderServiceImpl implements OrderService {
         executingOrder.setWaiting(waitingQueue);
         executingOrder.setDone(done);
         return executingOrder;
+    }
+
+
+    /**
+     * 获取一个订单的的所有无重复步骤的工序。
+     * fetch all procedures of an order.
+     *
+     * @apiNote 所有需要获取工序的地方都应该使用这个方法而不是
+     * workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId())
+     * 此方法仅限于本方法使用。
+     *
+     * @param order 要查询的工单。the order to fetch procedures.
+     * @return 返回该order的所有无重复步骤的工序。a List of {@link WorkProcedure}.
+     */
+    private List<WorkProcedure> getWorkProcedures(WorkOrder order) {
+        List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());
+
+        // Use streams to filter out duplicate operationIds and retain the first occurrence of each
+        list = list.stream()
+                .collect(Collectors.toMap(
+                        WorkProcedure::getOperationId,  // Use operationId as the key
+                        procedure -> procedure,         // Keep the entire WorkProcedure as the value
+                        (first, second) -> first        // If a duplicate operationId is found, keep the first one
+                ))
+                .values()
+                .stream()
+                .sorted(Comparator.comparingInt(WorkProcedure::getOperationId))
+                .toList();      // Collect the filtered procedures back into a list
+        return list;
     }
 
     /**

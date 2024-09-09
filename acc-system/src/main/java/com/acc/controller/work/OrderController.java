@@ -22,7 +22,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/orders")
 @Api(tags = "工单处理")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class OrderController {
 
     private final static boolean DEBUG = false;
@@ -179,6 +179,7 @@ public class OrderController {
     @Anonymous
     @GetMapping("/waiting/{workCenterCode}")
     public ResponseEntity<Integer> getWaitingOrdersCountByCenterCode(@PathVariable String workCenterCode) {
+        if (DEBUG) return ResponseEntity.ok(getTestStringIntegerMap().getOrDefault(workCenterCode, 5));
         log.info("Fetching all executing orders");
         try {
             List<ExecutingOrder> orders = orderService.getAllExecutingOrders();
@@ -204,8 +205,12 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/waiting/all")
+    @GetMapping("/waiting/all/map")
     public ResponseEntity<Map<String, Integer>> getAllWorkCentersWithWaitingOrders() {
+        if (DEBUG){
+            return ResponseEntity.ok(getTestStringIntegerMap());
+        }
+
         log.info("Fetching all work centers with waiting work orders");
         try {
             List<ExecutingOrder> orders = orderService.getAllExecutingOrders();
@@ -234,6 +239,22 @@ public class OrderController {
             log.error("Internal server error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    private static Map<String, Integer> getTestStringIntegerMap() {
+        Map<String, Integer> workCenterWaitingMap = new HashMap<>();
+        workCenterWaitingMap.put("test_a", 1);
+        workCenterWaitingMap.put("test_b", 2);
+        workCenterWaitingMap.put("test_c", 3);
+        workCenterWaitingMap.put("test_d", 4);
+        workCenterWaitingMap.put("test_e", 5);
+        workCenterWaitingMap.put("test_f", 6);
+        workCenterWaitingMap.put("test_g", 7);
+        workCenterWaitingMap.put("test_h", 8);
+        workCenterWaitingMap.put("test_i", 9);
+        workCenterWaitingMap.put("test_j", 10);
+        workCenterWaitingMap.put("test_k", 11);
+        return workCenterWaitingMap;
     }
 
 }
