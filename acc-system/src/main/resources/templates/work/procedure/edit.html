@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改工序管理')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-procedure-edit" th:object="${workProcedure}">
+        <input name="id" th:field="*{id}" type="hidden">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">物料号
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="materialId" th:field="*{materialId}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">物料描述
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="description" th:field="*{description}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">工序号
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="operationId" th:field="*{operationId}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">加工中心
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="workCenter" th:field="*{workCenter}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">工序描述
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="operationDescription" th:field="*{operationDescription}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">准备工时
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="setupTime" th:field="*{setupTime}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">加工工时
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="machineTime" th:field="*{machineTime}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">人工工时
+                    ：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="laborTime" th:field="*{laborTime}"
+                           type="text">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var prefix = ctx + "system/procedure";
+    $("#form-procedure-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-procedure-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>

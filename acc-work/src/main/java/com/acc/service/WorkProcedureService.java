@@ -1,4 +1,4 @@
-package com.acc.mapper;
+package com.acc.service;
 
 import com.acc.core.entity.WorkProcedure;
 
@@ -6,9 +6,9 @@ import java.util.List;
 
 
 /**
- * 工序管理Mapper接口
+ * 工序管理Service接口
  */
-public interface WorkProcedureMapper {
+public interface WorkProcedureService {
     /**
      * 查询工序管理
      *
@@ -42,18 +42,18 @@ public interface WorkProcedureMapper {
     int updateWorkProcedure(WorkProcedure workProcedure);
 
     /**
-     * 删除工序管理
+     * 批量删除工序管理
+     *
+     * @param ids 需要删除的工序管理主键集合
+     * @return 结果
+     */
+    int deleteWorkProcedureByIds(String ids);
+
+    /**
+     * 删除工序管理信息
      *
      * @param id 工序管理主键
      * @return 结果
      */
     int deleteWorkProcedureById(Long id);
-
-    /**
-     * 批量删除工序管理
-     *
-     * @param ids 需要删除的数据主键集合
-     * @return 结果
-     */
-    int deleteWorkProcedureByIds(String[] ids);
 }

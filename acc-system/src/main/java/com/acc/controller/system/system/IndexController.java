@@ -86,7 +86,7 @@ public class IndexController extends BaseController {
     @ApiOperation("获取系统介绍主页面")
     public String main(ModelMap mmap) {
         mmap.put("version", AccConfig.getVersion());
-        return "main";
+        return "/report/echarts.html";
     }
 
     // content-main class

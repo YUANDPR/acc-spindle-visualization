@@ -9,7 +9,7 @@ import com.acc.core.exception.IllegalOrderCorrespondingQuantityException;
 import com.acc.core.exception.OrderNotFoundException;
 import com.acc.mapper.ExecutingOrderMapper;
 import com.acc.mapper.OrderMapper;
-import com.acc.mapper.WorkProcedureMapper;
+import com.acc.mapper.ProcedureMapper;
 import com.acc.service.OrderService;
 import com.acc.service.RecordService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,12 @@ public class OrderServiceImpl implements OrderService {
 
     private final static boolean DEBUG = false;
     private final RecordService recordService;
-    private final WorkProcedureMapper workProcedureMapper;
+    private final ProcedureMapper workProcedureMapper;
     private final ExecutingOrderMapper executingOrderMapper;
     private final OrderMapper workOrderMapper;
 
     @Autowired
-    OrderServiceImpl(WorkProcedureMapper workProcedureMapper, ExecutingOrderMapper executingOrderMapper, OrderMapper workOrderMapper, RecordServiceImpl recordServiceImpl, RecordService recordService) {
+    OrderServiceImpl(ProcedureMapper workProcedureMapper, ExecutingOrderMapper executingOrderMapper, OrderMapper workOrderMapper, RecordServiceImpl recordServiceImpl, RecordService recordService) {
         this.workProcedureMapper = workProcedureMapper;
         this.executingOrderMapper = executingOrderMapper;
         this.workOrderMapper = workOrderMapper;

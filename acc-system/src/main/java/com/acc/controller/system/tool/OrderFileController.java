@@ -4,11 +4,13 @@ import com.acc.controller.system.BaseController;
 import com.acc.core.config.AccConfig;
 import com.acc.core.config.ServerConfig;
 import com.acc.core.entity.WorkOrder;
+import com.acc.core.entity.WorkProcedure;
 import com.acc.core.exception.file.NonWorkOrderFileException;
 import com.acc.core.result.AjaxResult;
 import com.acc.core.utils.file.FileUploadUtils;
 import com.acc.core.utils.file.FileUtils;
 import com.acc.mapper.OrderMapper;
+import com.acc.mapper.ProcedureMapper;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -46,6 +48,9 @@ public class OrderFileController extends BaseController {
 
     @Autowired
     private OrderMapper workOrderMapper;
+
+    @Autowired
+    private ProcedureMapper workProcedureMapper;
 
     @RequiresPermissions("tool:work:view")
     @GetMapping
@@ -118,9 +123,68 @@ public class OrderFileController extends BaseController {
 
     /**
      * 读取工序并存储工序信息
-     * todo 完成读取工序文件代码
      */
     private void readProcessExcel(String readPath) {
+        EasyExcel.read(readPath, WorkProcedure.class, new AnalysisEventListener<WorkProcedure>() {
+            /**
+             * 单次缓存的数据量
+             */
+            public static final int BATCH_COUNT = 100;
+
+            private boolean isOrder = false;
+            /**
+             *临时存储
+             */
+            private List<WorkProcedure> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+
+            /**
+             * 读取表头
+             */
+            @Override
+            public void invokeHead(Map<Integer, ReadCellData<?>> headMap, AnalysisContext context) {
+                Map<Integer, String> integerStringMap = ConverterUtils.convertToStringMap(headMap, context);
+                Set<String> values = Set.of("Material", "Description(CN)", "OpAc", "Work center", "Operation Description"
+                        , "Setup", "Machine", "Labor");
+                // 校验表头是否含有特定的一些字段
+                if (!values.stream().allMatch(integerStringMap::containsValue)) {
+                    throw new NonWorkOrderFileException("上传文件非工序文件，请重新上传！");
+                } else {
+                    isOrder = true;
+                }
+            }
+
+            /**
+             * 每读取一条数据执行
+             */
+            @Override
+            public void invoke(WorkProcedure data, AnalysisContext context) {
+                if (isOrder) {
+                    cachedDataList.add(data);
+                    if (cachedDataList.size() >= BATCH_COUNT) {
+                        saveData(cachedDataList);
+                        // 存储完成清理 list
+                        cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+                    }
+                }
+            }
+
+            /**
+             * 读取结束后执行
+             */
+            @Override
+            public void doAfterAllAnalysed(AnalysisContext context) {
+                if (isOrder) {
+                    saveData(cachedDataList);
+                }
+            }
+
+            /**
+             * 存储数据库
+             */
+            private void saveData(List<WorkProcedure> workProcedures) {
+                workProcedureMapper.insertBatch(workProcedures);
+            }
+        }).sheet().doRead();
     }
 
     /**
