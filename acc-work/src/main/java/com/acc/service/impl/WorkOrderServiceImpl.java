@@ -14,8 +14,14 @@ import java.util.List;
  */
 @Service
 public class WorkOrderServiceImpl implements WorkOrderService {
+
+    private final WorkOrderMapper workOrderMapper;
+
+
     @Autowired
-    private WorkOrderMapper workOrderMapper;
+    WorkOrderServiceImpl(WorkOrderMapper workOrderMapper) {
+        this.workOrderMapper = workOrderMapper;
+    }
 
     /**
      * 查询生产工单

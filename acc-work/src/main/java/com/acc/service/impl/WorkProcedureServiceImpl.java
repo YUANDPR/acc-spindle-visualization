@@ -14,8 +14,13 @@ import java.util.List;
  */
 @Service
 public class WorkProcedureServiceImpl implements WorkProcedureService {
+
+    private final WorkProcedureMapper workProcedureMapper;
+
     @Autowired
-    private WorkProcedureMapper workProcedureMapper;
+    public WorkProcedureServiceImpl(WorkProcedureMapper workProcedureMapper) {
+        this.workProcedureMapper = workProcedureMapper;
+    }
 
     /**
      * 查询工序管理
