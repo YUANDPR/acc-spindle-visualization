@@ -34,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper workOrderMapper;
 
     @Autowired
-    OrderServiceImpl(ProcedureMapper workProcedureMapper, ExecutingOrderMapper executingOrderMapper, OrderMapper workOrderMapper, RecordServiceImpl recordServiceImpl, RecordService recordService) {
+    OrderServiceImpl(ProcedureMapper workProcedureMapper, ExecutingOrderMapper executingOrderMapper, OrderMapper workOrderMapper, RecordService recordService) {
         this.workProcedureMapper = workProcedureMapper;
         this.executingOrderMapper = executingOrderMapper;
         this.workOrderMapper = workOrderMapper;
