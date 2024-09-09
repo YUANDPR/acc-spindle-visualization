@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.acc.mapper.ProcedureMapper">
     <update id="insertBatch">
-        replace into work_procedure (material_id, description, operation_id, work_center, operation_description, setup_time, machine_time, labor_time)
+        replace into work_procedure (material_id, description, operation_id, work_center, operation_description,
+        setup_time, machine_time, labor_time)
         values
         <foreach collection="workProcedures" item="w" separator=",">
-            (#{w.materialId}, #{w.description}, #{w.operationId}, #{w.workCenter}, #{w.operationDescription}, #{w.setupTime}, #{w.machineTime}, #{w.laborTime})
+            (#{w.materialId}, #{w.description}, #{w.operationId}, #{w.workCenter}, #{w.operationDescription},
+            #{w.setupTime}, #{w.machineTime}, #{w.laborTime})
         </foreach>
     </update>
 </mapper>

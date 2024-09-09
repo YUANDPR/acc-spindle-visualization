@@ -144,7 +144,7 @@ public class OrderFileController extends BaseController {
             public void invokeHead(Map<Integer, ReadCellData<?>> headMap, AnalysisContext context) {
                 Map<Integer, String> integerStringMap = ConverterUtils.convertToStringMap(headMap, context);
                 Set<String> values = Set.of("Material", "Description(CN)", "OpAc", "Work center", "Operation Description"
-                , "Setup", "Machine", "Labor");
+                        , "Setup", "Machine", "Labor");
                 // 校验表头是否含有特定的一些字段
                 if (!values.stream().allMatch(integerStringMap::containsValue)) {
                     throw new NonWorkOrderFileException("上传文件非工序文件，请重新上传！");

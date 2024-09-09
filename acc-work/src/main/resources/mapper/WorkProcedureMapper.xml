@@ -5,132 +5,142 @@
 <mapper namespace="com.acc.mapper.WorkProcedureMapper">
 
     <resultMap type="WorkProcedure" id="WorkProcedureResult">
-            <result property="id" column="id"/>
-            <result property="materialId" column="material_id"/>
-            <result property="description" column="description"/>
-            <result property="operationId" column="operation_id"/>
-            <result property="workCenter" column="work_center"/>
-            <result property="operationDescription" column="operation_description"/>
-            <result property="setupTime" column="setup_time"/>
-            <result property="machineTime" column="machine_time"/>
-            <result property="laborTime" column="labor_time"/>
+        <result property="id" column="id"/>
+        <result property="materialId" column="material_id"/>
+        <result property="description" column="description"/>
+        <result property="operationId" column="operation_id"/>
+        <result property="workCenter" column="work_center"/>
+        <result property="operationDescription" column="operation_description"/>
+        <result property="setupTime" column="setup_time"/>
+        <result property="machineTime" column="machine_time"/>
+        <result property="laborTime" column="labor_time"/>
     </resultMap>
 
     <sql id="selectWorkProcedureVo">
-        select id, material_id, description, operation_id, work_center, operation_description, setup_time, machine_time, labor_time
+        select id,
+               material_id,
+               description,
+               operation_id,
+               work_center,
+               operation_description,
+               setup_time,
+               machine_time,
+               labor_time
         from work_procedure
     </sql>
 
     <select id="selectWorkProcedureList" parameterType="WorkProcedure" resultMap="WorkProcedureResult">
         <include refid="selectWorkProcedureVo"/>
         <where>
-                        <if test="materialId != null  and materialId != ''">
-                            and material_id = #{materialId}
-                        </if>
-                        <if test="description != null  and description != ''">
-                            and description = #{description}
-                        </if>
-                        <if test="operationId != null ">
-                            and operation_id = #{operationId}
-                        </if>
-                        <if test="workCenter != null  and workCenter != ''">
-                            and work_center = #{workCenter}
-                        </if>
-                        <if test="operationDescription != null  and operationDescription != ''">
-                            and operation_description = #{operationDescription}
-                        </if>
-                        <if test="setupTime != null ">
-                            and setup_time = #{setupTime}
-                        </if>
-                        <if test="machineTime != null ">
-                            and machine_time = #{machineTime}
-                        </if>
-                        <if test="laborTime != null ">
-                            and labor_time = #{laborTime}
-                        </if>
+            <if test="materialId != null  and materialId != ''">
+                and material_id = #{materialId}
+            </if>
+            <if test="description != null  and description != ''">
+                and description = #{description}
+            </if>
+            <if test="operationId != null ">
+                and operation_id = #{operationId}
+            </if>
+            <if test="workCenter != null  and workCenter != ''">
+                and work_center = #{workCenter}
+            </if>
+            <if test="operationDescription != null  and operationDescription != ''">
+                and operation_description = #{operationDescription}
+            </if>
+            <if test="setupTime != null ">
+                and setup_time = #{setupTime}
+            </if>
+            <if test="machineTime != null ">
+                and machine_time = #{machineTime}
+            </if>
+            <if test="laborTime != null ">
+                and labor_time = #{laborTime}
+            </if>
         </where>
     </select>
 
     <select id="selectWorkProcedureById" parameterType="Long"
             resultMap="WorkProcedureResult">
-            <include refid="selectWorkProcedureVo"/>
-            where id = #{id}
+        <include refid="selectWorkProcedureVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertWorkProcedure" parameterType="WorkProcedure" useGeneratedKeys="true"
             keyProperty="id">
         insert into work_procedure
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="materialId != null">material_id,
-                    </if>
-                    <if test="description != null">description,
-                    </if>
-                    <if test="operationId != null">operation_id,
-                    </if>
-                    <if test="workCenter != null">work_center,
-                    </if>
-                    <if test="operationDescription != null">operation_description,
-                    </if>
-                    <if test="setupTime != null">setup_time,
-                    </if>
-                    <if test="machineTime != null">machine_time,
-                    </if>
-                    <if test="laborTime != null">labor_time,
-                    </if>
+            <if test="materialId != null">material_id,
+            </if>
+            <if test="description != null">description,
+            </if>
+            <if test="operationId != null">operation_id,
+            </if>
+            <if test="workCenter != null">work_center,
+            </if>
+            <if test="operationDescription != null">operation_description,
+            </if>
+            <if test="setupTime != null">setup_time,
+            </if>
+            <if test="machineTime != null">machine_time,
+            </if>
+            <if test="laborTime != null">labor_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="materialId != null">#{materialId},
-                    </if>
-                    <if test="description != null">#{description},
-                    </if>
-                    <if test="operationId != null">#{operationId},
-                    </if>
-                    <if test="workCenter != null">#{workCenter},
-                    </if>
-                    <if test="operationDescription != null">#{operationDescription},
-                    </if>
-                    <if test="setupTime != null">#{setupTime},
-                    </if>
-                    <if test="machineTime != null">#{machineTime},
-                    </if>
-                    <if test="laborTime != null">#{laborTime},
-                    </if>
+            <if test="materialId != null">#{materialId},
+            </if>
+            <if test="description != null">#{description},
+            </if>
+            <if test="operationId != null">#{operationId},
+            </if>
+            <if test="workCenter != null">#{workCenter},
+            </if>
+            <if test="operationDescription != null">#{operationDescription},
+            </if>
+            <if test="setupTime != null">#{setupTime},
+            </if>
+            <if test="machineTime != null">#{machineTime},
+            </if>
+            <if test="laborTime != null">#{laborTime},
+            </if>
         </trim>
     </insert>
 
     <update id="updateWorkProcedure" parameterType="WorkProcedure">
         update work_procedure
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="materialId != null">material_id =
-                        #{materialId},
-                    </if>
-                    <if test="description != null">description =
-                        #{description},
-                    </if>
-                    <if test="operationId != null">operation_id =
-                        #{operationId},
-                    </if>
-                    <if test="workCenter != null">work_center =
-                        #{workCenter},
-                    </if>
-                    <if test="operationDescription != null">operation_description =
-                        #{operationDescription},
-                    </if>
-                    <if test="setupTime != null">setup_time =
-                        #{setupTime},
-                    </if>
-                    <if test="machineTime != null">machine_time =
-                        #{machineTime},
-                    </if>
-                    <if test="laborTime != null">labor_time =
-                        #{laborTime},
-                    </if>
+            <if test="materialId != null">material_id =
+                #{materialId},
+            </if>
+            <if test="description != null">description =
+                #{description},
+            </if>
+            <if test="operationId != null">operation_id =
+                #{operationId},
+            </if>
+            <if test="workCenter != null">work_center =
+                #{workCenter},
+            </if>
+            <if test="operationDescription != null">operation_description =
+                #{operationDescription},
+            </if>
+            <if test="setupTime != null">setup_time =
+                #{setupTime},
+            </if>
+            <if test="machineTime != null">machine_time =
+                #{machineTime},
+            </if>
+            <if test="laborTime != null">labor_time =
+                #{laborTime},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteWorkProcedureById" parameterType="Long">
-        delete from work_procedure where id = #{id}
+        delete
+        from work_procedure
+        where id = #{id}
     </delete>
 
     <delete id="deleteWorkProcedureByIds" parameterType="String">

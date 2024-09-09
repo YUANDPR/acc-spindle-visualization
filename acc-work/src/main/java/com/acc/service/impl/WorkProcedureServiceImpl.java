@@ -47,7 +47,7 @@ public class WorkProcedureServiceImpl implements WorkProcedureService {
      */
     @Override
     public int insertWorkProcedure(WorkProcedure workProcedure) {
-            return workProcedureMapper.insertWorkProcedure(workProcedure);
+        return workProcedureMapper.insertWorkProcedure(workProcedure);
     }
 
     /**

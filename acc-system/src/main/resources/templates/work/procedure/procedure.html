@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="include :: header('工序管理列表')"/>
 </head>
@@ -10,38 +10,38 @@
             <form id="formId">
                 <div class="select-list">
                     <ul>
-                                    <li>
-                                        <label>物料号：</label>
-                                        <input type="text" name="materialId"/>
-                                    </li>
-                                    <li>
-                                        <label>物料描述：</label>
-                                        <input type="text" name="description"/>
-                                    </li>
-                                    <li>
-                                        <label>工序号：</label>
-                                        <input type="text" name="operationId"/>
-                                    </li>
-                                    <li>
-                                        <label>加工中心：</label>
-                                        <input type="text" name="workCenter"/>
-                                    </li>
-                                    <li>
-                                        <label>工序描述：</label>
-                                        <input type="text" name="operationDescription"/>
-                                    </li>
-                                    <li>
-                                        <label>准备工时：</label>
-                                        <input type="text" name="setupTime"/>
-                                    </li>
-                                    <li>
-                                        <label>加工工时：</label>
-                                        <input type="text" name="machineTime"/>
-                                    </li>
-                                    <li>
-                                        <label>人工工时：</label>
-                                        <input type="text" name="laborTime"/>
-                                    </li>
+                        <li>
+                            <label>物料号：</label>
+                            <input name="materialId" type="text"/>
+                        </li>
+                        <li>
+                            <label>物料描述：</label>
+                            <input name="description" type="text"/>
+                        </li>
+                        <li>
+                            <label>工序号：</label>
+                            <input name="operationId" type="text"/>
+                        </li>
+                        <li>
+                            <label>加工中心：</label>
+                            <input name="workCenter" type="text"/>
+                        </li>
+                        <li>
+                            <label>工序描述：</label>
+                            <input name="operationDescription" type="text"/>
+                        </li>
+                        <li>
+                            <label>准备工时：</label>
+                            <input name="setupTime" type="text"/>
+                        </li>
+                        <li>
+                            <label>加工工时：</label>
+                            <input name="machineTime" type="text"/>
+                        </li>
+                        <li>
+                            <label>人工工时：</label>
+                            <input name="laborTime" type="text"/>
+                        </li>
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
@@ -91,43 +91,43 @@
             columns: [{
                 checkbox: true
             },
-                        {
-                            field: 'id',
-                            title: '主键',
-                            visible: false
-                        },
-                        {
-                            field: 'materialId',
-                            title: '物料号'
-                        },
-                        {
-                            field: 'description',
-                            title: '物料描述'
-                        },
-                        {
-                            field: 'operationId',
-                            title: '工序号'
-                        },
-                        {
-                            field: 'workCenter',
-                            title: '加工中心'
-                        },
-                        {
-                            field: 'operationDescription',
-                            title: '工序描述'
-                        },
-                        {
-                            field: 'setupTime',
-                            title: '准备工时'
-                        },
-                        {
-                            field: 'machineTime',
-                            title: '加工工时'
-                        },
-                        {
-                            field: 'laborTime',
-                            title: '人工工时'
-                        },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'materialId',
+                    title: '物料号'
+                },
+                {
+                    field: 'description',
+                    title: '物料描述'
+                },
+                {
+                    field: 'operationId',
+                    title: '工序号'
+                },
+                {
+                    field: 'workCenter',
+                    title: '加工中心'
+                },
+                {
+                    field: 'operationDescription',
+                    title: '工序描述'
+                },
+                {
+                    field: 'setupTime',
+                    title: '准备工时'
+                },
+                {
+                    field: 'machineTime',
+                    title: '加工工时'
+                },
+                {
+                    field: 'laborTime',
+                    title: '人工工时'
+                },
                 {
                     title: '操作',
                     align: 'center',

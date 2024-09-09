@@ -15,7 +15,7 @@ public interface WorkProcedureService {
      * @param id 工序管理主键
      * @return 工序管理
      */
-     WorkProcedure selectWorkProcedureById(Long id);
+    WorkProcedure selectWorkProcedureById(Long id);
 
     /**
      * 查询工序管理列表
@@ -23,7 +23,7 @@ public interface WorkProcedureService {
      * @param workProcedure 工序管理
      * @return 工序管理集合
      */
-     List<WorkProcedure> selectWorkProcedureList(WorkProcedure workProcedure);
+    List<WorkProcedure> selectWorkProcedureList(WorkProcedure workProcedure);
 
     /**
      * 新增工序管理
@@ -31,7 +31,7 @@ public interface WorkProcedureService {
      * @param workProcedure 工序管理
      * @return 结果
      */
-     int insertWorkProcedure(WorkProcedure workProcedure);
+    int insertWorkProcedure(WorkProcedure workProcedure);
 
     /**
      * 修改工序管理
@@ -39,7 +39,7 @@ public interface WorkProcedureService {
      * @param workProcedure 工序管理
      * @return 结果
      */
-     int updateWorkProcedure(WorkProcedure workProcedure);
+    int updateWorkProcedure(WorkProcedure workProcedure);
 
     /**
      * 批量删除工序管理
@@ -47,7 +47,7 @@ public interface WorkProcedureService {
      * @param ids 需要删除的工序管理主键集合
      * @return 结果
      */
-     int deleteWorkProcedureByIds(String ids);
+    int deleteWorkProcedureByIds(String ids);
 
     /**
      * 删除工序管理信息
@@ -55,5 +55,5 @@ public interface WorkProcedureService {
      * @param id 工序管理主键
      * @return 结果
      */
-     int deleteWorkProcedureById(Long id);
+    int deleteWorkProcedureById(Long id);
 }
