@@ -26,4 +26,15 @@ public class ExecutingOrderDto {
         }
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "ExecutingOrderDto{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", executingProcedureId=" + executingProcedureId +
+                ", executing=" + executing +
+                ", update_time=" + update_time +
+                '}';
+    }
 }

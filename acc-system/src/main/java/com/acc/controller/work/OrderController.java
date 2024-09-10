@@ -22,7 +22,6 @@ import java.util.*;
 @RequestMapping("/orders")
 @Api(tags = "工单处理")
 @CrossOrigin(origins = "*")
-@RequiresPermissions("sss")
 public class OrderController {
 
     private final static boolean DEBUG = false;
@@ -90,7 +89,7 @@ public class OrderController {
      * @param orderId 订单ID
      * @return 返回工作订单信息或错误信息
      */
-    @RequiresPermissions("work:order:get")
+//    @RequiresPermissions("work:order:get")
     @GetMapping("/{orderId}")
     public ResponseEntity<?> getWorkOrder(@PathVariable int orderId) {
         // 记录获取工作订单的日志信息
@@ -130,7 +129,7 @@ public class OrderController {
      * @param id 工单的ID，从URL路径中获取.
      * @return 返回一个包含工单信息的响应实体.
      */
-    @RequiresPermissions("work:order:get")
+//    @RequiresPermissions("work:order:get")
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getWorkOrderById(@PathVariable int id) {
         // 记录信息日志，指示正在检索特定ID的工单
@@ -166,7 +165,7 @@ public class OrderController {
      * @param orderId 订单的唯一标识符
      * @return 一个ResponseEntity对象，包含请求的状态码、头信息和工作流程数据或错误信息
      */
-    @RequiresPermissions("work:procedure:get")
+//    @RequiresPermissions("work:procedure:get")
     @GetMapping("/procedures/{orderId}")
     public ResponseEntity<?> getWorkProcedures(@PathVariable int orderId) {
         // 记录尝试获取工作流程的日志消息
@@ -230,7 +229,7 @@ public class OrderController {
      * @param orderId 订单ID
      * @return 返回订单详情对象或错误信息
      */
-    @RequiresPermissions("work:executing:get")
+//    @RequiresPermissions("work:executing:get")
     @GetMapping("/executing/{orderId}")
     public ResponseEntity<?> createExecutingOrder(@PathVariable int orderId) {
         // 记录尝试获取正在执行的订单的日志
@@ -297,7 +296,7 @@ public class OrderController {
      * @return 包含所有正在执行的订单的响应实体，或者在没有订单时返回204 NO CONTENT，
      * 在发生错误时返回404 NOT FOUND或500 INTERNAL SERVER ERROR
      */
-    @RequiresPermissions("work:executing:get")
+//    @RequiresPermissions("work:executing:get")
     @GetMapping("/all")
     public ResponseEntity<List<ExecutingOrderDto>> getAllExecutingOrders() {
         log.info("Fetching all executing orders");
@@ -329,7 +328,7 @@ public class OrderController {
      * @param workCenterCode 工作中心的代码
      * @return 包含待处理订单数量的响应实体
      */
-    @RequiresPermissions("work:order:get")
+//    @RequiresPermissions("work:order:get")
     @GetMapping("/waiting/{workCenterCode}")
     public ResponseEntity<Integer> getWaitingOrdersCountByCenterCode(@PathVariable String workCenterCode) {
         log.info("获取所有正在执行的订单");
@@ -366,8 +365,8 @@ public class OrderController {
      *
      * @return 包含所有工作中心及其待处理订单数的映射的响应实体
      */
-    @RequiresPermissions("work:order:get")
-    @GetMapping("/waiting/all")
+//    @RequiresPermissions("work:order:get")
+    @GetMapping("/waiting/all/map")
     public ResponseEntity<Map<String, Integer>> getAllWorkCentersWithWaitingOrders() {
         if (DEBUG) {
             return ResponseEntity.ok(getTestStringIntegerMap());

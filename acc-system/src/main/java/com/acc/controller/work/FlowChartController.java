@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * 流程图控制器
  */
-@RequestMapping("/flowChart")
+@RequestMapping("/flow")
 @Controller
 public class FlowChartController {
 
@@ -15,4 +15,5 @@ public class FlowChartController {
     public String index() {
         return "flow";
     }
+
 }
