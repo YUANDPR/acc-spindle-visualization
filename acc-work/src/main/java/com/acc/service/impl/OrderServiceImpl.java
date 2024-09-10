@@ -231,12 +231,11 @@ public class OrderServiceImpl implements OrderService {
      * 获取一个订单的的所有无重复步骤的工序。
      * fetch all procedures of an order.
      *
+     * @param order 要查询的工单。the order to fetch procedures.
+     * @return 返回该order的所有无重复步骤的工序。a List of {@link WorkProcedure}.
      * @apiNote 所有需要获取工序的地方都应该使用这个方法而不是
      * workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId())
      * 此方法仅限于本方法使用。
-     *
-     * @param order 要查询的工单。the order to fetch procedures.
-     * @return 返回该order的所有无重复步骤的工序。a List of {@link WorkProcedure}.
      */
     private List<WorkProcedure> getWorkProcedures(WorkOrder order) {
         List<WorkProcedure> list = workProcedureMapper.findByMaterialIdOrderByOperationId(order.getMaterialId());

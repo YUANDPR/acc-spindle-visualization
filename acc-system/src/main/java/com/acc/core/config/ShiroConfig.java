@@ -271,6 +271,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/ajax/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/acc/**", "anon");
+        filterChainDefinitionMap.put("/flow/**", "anon");
+        filterChainDefinitionMap.put("/flowChart", "anon");
         filterChainDefinitionMap.put("/captcha/captchaImage**", "anon");
 
         filterChainDefinitionMap.put("/orders/**", "anon");
