@@ -23,7 +23,6 @@ import java.util.*;
 @RequestMapping("/orders")
 @Api(tags = "工单处理")
 @CrossOrigin(origins = "*")
-@RequiresPermissions("sss")
 public class OrderController {
 
     private final static boolean DEBUG = false;
