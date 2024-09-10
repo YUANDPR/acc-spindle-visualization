@@ -1,6 +1,5 @@
 package com.acc.controller.work;
 
-import com.acc.core.annotation.Anonymous;
 import com.acc.core.dto.ExecutingOrderDto;
 import com.acc.core.entity.ExecutingOrder;
 import com.acc.core.entity.WorkOrder;
@@ -36,6 +35,21 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    private static Map<String, Integer> getTestStringIntegerMap() {
+        Map<String, Integer> workCenterWaitingMap = new HashMap<>();
+        workCenterWaitingMap.put("test_a", 1);
+        workCenterWaitingMap.put("test_b", 2);
+        workCenterWaitingMap.put("test_c", 3);
+        workCenterWaitingMap.put("test_d", 4);
+        workCenterWaitingMap.put("test_e", 5);
+        workCenterWaitingMap.put("test_f", 6);
+        workCenterWaitingMap.put("test_g", 7);
+        workCenterWaitingMap.put("test_h", 8);
+        workCenterWaitingMap.put("test_i", 9);
+        workCenterWaitingMap.put("test_j", 10);
+        workCenterWaitingMap.put("test_k", 11);
+        return workCenterWaitingMap;
+    }
 
     /**
      * 创建新的工单
@@ -70,7 +84,6 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error creating work order: " + e.getMessage());
         }
     }
-
 
     /**
      * 根据订单ID获取工作订单详情
@@ -109,7 +122,6 @@ public class OrderController {
         }
     }
 
-
     /**
      * 根据ID获取工单信息的处理器方法.
      * <p>
@@ -144,7 +156,6 @@ public class OrderController {
         // 返回包含工单信息的响应实体
         return ResponseEntity.ok(workOrder);
     }
-
 
     /**
      * 根据订单ID获取工作流程信息
@@ -188,7 +199,6 @@ public class OrderController {
         }
     }
 
-
     /**
      * 通过订单ID删除工作订单。
      *
@@ -214,7 +224,6 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error deleting work order: " + e.getMessage());
         }
     }
-
 
     /**
      * 通过订单ID获取正在执行的订单详情
@@ -256,7 +265,6 @@ public class OrderController {
         }
     }
 
-
     /**
      * 通过REST API更新指定用户的执行中订单状态
      *
@@ -283,7 +291,6 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error updating executing order: " + e.getMessage());
         }
     }
-
 
     /**
      * 响应GET请求，获取所有正在执行的订单
@@ -316,7 +323,6 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
     /**
      * 根据工作中心代码查询待处理订单数量
@@ -356,7 +362,6 @@ public class OrderController {
         }
     }
 
-
     /**
      * 获取所有有待处理订单的工作中心
      *
@@ -365,7 +370,7 @@ public class OrderController {
     @RequiresPermissions("work:order:get")
     @GetMapping("/waiting/all")
     public ResponseEntity<Map<String, Integer>> getAllWorkCentersWithWaitingOrders() {
-        if (DEBUG){
+        if (DEBUG) {
             return ResponseEntity.ok(getTestStringIntegerMap());
         }
 
@@ -405,22 +410,6 @@ public class OrderController {
             log.error("Internal server error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    private static Map<String, Integer> getTestStringIntegerMap() {
-        Map<String, Integer> workCenterWaitingMap = new HashMap<>();
-        workCenterWaitingMap.put("test_a", 1);
-        workCenterWaitingMap.put("test_b", 2);
-        workCenterWaitingMap.put("test_c", 3);
-        workCenterWaitingMap.put("test_d", 4);
-        workCenterWaitingMap.put("test_e", 5);
-        workCenterWaitingMap.put("test_f", 6);
-        workCenterWaitingMap.put("test_g", 7);
-        workCenterWaitingMap.put("test_h", 8);
-        workCenterWaitingMap.put("test_i", 9);
-        workCenterWaitingMap.put("test_j", 10);
-        workCenterWaitingMap.put("test_k", 11);
-        return workCenterWaitingMap;
     }
 
 }
