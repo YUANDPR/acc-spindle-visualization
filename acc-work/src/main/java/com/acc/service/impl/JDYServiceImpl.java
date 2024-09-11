@@ -2,21 +2,26 @@ package com.acc.service.impl;
 
 
 import com.acc.api.jdy.FormApiClient;
+import com.acc.api.jdy.FormDataApiClient;
 import com.acc.constants.HttpConstant;
 import com.acc.core.dto.ExecutingOrderDto;
 import com.acc.core.entity.ExecutingOrder;
 import com.acc.core.exception.IllegalOrderCorrespondingQuantityException;
 import com.acc.core.exception.OrderNotFoundException;
 import com.acc.mapper.ExecutingOrderMapper;
+import com.acc.model.form.FormDataQueryParam;
+import com.acc.model.form.FormDataUpdateParam;
 import com.acc.model.form.FormQueryParam;
 import com.acc.service.JDYService;
 import com.acc.service.OrderService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +36,14 @@ public class JDYServiceImpl implements JDYService {
     private final OrderService orderService;
     private final ExecutingOrderMapper executingOrderMapper;
     private static final FormApiClient formApiClient = new FormApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
+    private static final FormDataApiClient formDataApiClient = new FormDataApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
+
+    private List<EWResult> currentEWResults;
 
     public JDYServiceImpl(OrderService orderService, ExecutingOrderMapper executingOrderMapper) {
         this.orderService = orderService;
         this.executingOrderMapper = executingOrderMapper;
+
         try {
             JDYDataPush();
         } catch (Exception e) {
@@ -46,6 +55,13 @@ public class JDYServiceImpl implements JDYService {
     public void JDYDataPush() throws Exception {
         formWidgets();
         entryList();
+        FormDataQueryParam formDataQueryParam = new FormDataQueryParam(APP_ID, ENTRY_ID);
+        Map<String, Object> v5 = formDataApiClient.batchDataQuery(formDataQueryParam, "v5");
+        List<EWResult> ewResults = parseEWResults(v5);
+        ewResults.forEach(ewResult -> System.out.println(ewResults));
+        currentEWResults = ewResults;
+
+//        FormDataUpdateParam formDataUpdateParam = new FormDataUpdateParam(APP_ID, ENTRY_ID,);
     }
 
     private static void formWidgets() throws Exception {
@@ -173,4 +189,86 @@ public class JDYServiceImpl implements JDYService {
     private record Result(String creatorName, String creatorUsername, int creatorStatus) {
     }
 
+    @Data
+    private class EWResult {
+        private User creator;
+        private User updater;
+        private User deleter;
+        private String createTime;
+        private String updateTime;
+        private String deleteTime;
+        private int id;
+        private int orderId;
+        private int executingProcedureId;
+        private List<Object> executing;
+        private Long updateTimeValue;
+        private String _id;
+        private String appId;
+        private String entryId;
+    }
+    @Data
+    private static class User {
+        private String name;
+        private String username;
+        private int status;
+        private int type;
+        private List<Integer> departments;
+    }
+
+
+    private List<EWResult> parseEWResults(Map<String, Object> dataMap){
+
+        // 获取 data 对应的列表
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) dataMap.get("data");
+
+        // 创建结果的列表
+        List<EWResult> ewResults = new ArrayList<>();
+
+        // 遍历列表，并手动解析每个对象
+        for (Map<String, Object> item : dataList) {
+            EWResult result = new EWResult();
+
+            // 处理 creator 对象
+            Map<String, Object> creatorMap = (Map<String, Object>) item.get("creator");
+            result.setCreator(parseUser(creatorMap));
+
+            // 处理 updater 对象
+            Map<String, Object> updaterMap = (Map<String, Object>) item.get("updater");
+            result.setUpdater(parseUser(updaterMap));
+
+            // 处理 deleter 对象 (如果有)
+            Map<String, Object> deleterMap = (Map<String, Object>) item.get("deleter");
+            if (deleterMap != null) {
+                result.setDeleter(parseUser(deleterMap));
+            }
+
+            // 设置其他简单的字段
+            result.setCreateTime((String) item.get("createTime"));
+            result.setUpdateTime((String) item.get("updateTime"));
+            result.setDeleteTime((String) item.get("deleteTime"));
+            System.out.println(item.get("id"));
+            result.setId((Integer) item.get("id"));
+            result.setOrderId(Integer.parseInt((String) item.get("order_id")));
+            result.setExecutingProcedureId(Integer.parseInt((String) item.get("executing_procedure_id")));
+            result.setExecuting((List<Object>) item.get("executing"));
+            result.setUpdateTimeValue(Long.valueOf((item.get("update_time").toString())));
+            result.set_id((String) item.get("_id"));
+            result.setAppId((String) item.get("appId"));
+            result.setEntryId((String) item.get("entryId"));
+
+            // 将构建好的 EWResult 对象添加到列表中
+            ewResults.add(result);
+        }
+        return ewResults;
+    }
+
+    private User parseUser(Map<String, Object> userMap) {
+        User user = new User();
+        user.setName((String) userMap.get("name"));
+        user.setUsername((String) userMap.get("username"));
+        user.setStatus((Integer) userMap.get("status"));
+        user.setType((Integer) userMap.get("type"));
+        user.setDepartments((List<Integer>) userMap.get("departments"));
+        return user;
+    }
 }
