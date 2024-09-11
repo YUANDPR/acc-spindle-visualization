@@ -9,4 +9,6 @@ public interface JDYService {
     boolean validateSignature(String receivedSignature, String nonce, String body, String timestamp);
 
     void handleUpdate(String body) throws IllegalOrderCorrespondingQuantityException;
+
+    void pullAllDataFromJDY();
 }

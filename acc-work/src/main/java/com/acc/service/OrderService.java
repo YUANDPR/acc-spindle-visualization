@@ -47,4 +47,5 @@ public interface OrderService {
     List<ExecutingOrder> getAllExecutingOrders() throws OrderNotFoundException;
 
     WorkOrder getWorkOrderById(int id);
+
 }

@@ -41,10 +41,8 @@ public class JDYServiceImpl implements JDYService {
     public JDYServiceImpl(OrderService orderService, ExecutingOrderMapper executingOrderMapper) {
         this.orderService = orderService;
         this.executingOrderMapper = executingOrderMapper;
-
         try {
             testJDY();
-            pushAllData2JDY();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -62,6 +60,38 @@ public class JDYServiceImpl implements JDYService {
                 .map(orderService::serializeExecutingOrder)
                 .forEach(this::updateExecutingOrder);
     }
+
+
+    @Override
+    public void pullAllDataFromJDY() {
+        List<EWResult> allData = getAllData();  // 获取所有数据
+        for (EWResult ewResult : allData) {
+            try {
+                ExecutingOrderDto executingOrderDto = new ExecutingOrderDto();
+                executingOrderDto.setId(ewResult.getId());
+                executingOrderDto.setOrderId(ewResult.getOrderId());
+                executingOrderDto.setExecutingProcedureId(ewResult.getExecutingProcedureId());
+                executingOrderDto.setExecuting(ewResult.getExecuting() != null && !ewResult.getExecuting().isEmpty());
+                executingOrderDto.setUpdate_time(ewResult.getUpdateTimeValue());
+
+                // 处理订单信息
+                ExecutingOrder existingOrder = orderService.getExecutingOrderByOrderId(executingOrderDto.getOrderId());
+
+                if (existingOrder != null) {
+                    // 如果订单已存在，则更新订单
+                    executingOrderMapper.updateExecutingOrder(executingOrderDto);
+                } else {
+                    // 如果订单不存在，则插入新订单
+                    executingOrderMapper.insertExecutingOrder(executingOrderDto);
+                }
+            } catch (OrderNotFoundException e) {
+                log.error("Order not found for ID: {}", ewResult.getId(), e);
+            } catch (Exception e) {
+                log.error("Failed to process EWResult with ID: {}", ewResult.getId(), e);
+            }
+        }
+    }
+
 
     private List<EWResult> getAllData(){
         FormDataQueryParam formDataQueryParam = new FormDataQueryParam(APP_ID, ENTRY_ID);
@@ -167,6 +197,7 @@ public class JDYServiceImpl implements JDYService {
         }
 
     }
+
 
     // 处理数据创建操作
     private ExecutingOrderDto processDataCreate(JSONObject data) {
