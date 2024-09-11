@@ -87,4 +87,6 @@ public class ExecutingOrderDto {
         setExecuting(ewResult.getExecuting() != null && !ewResult.getExecuting().isEmpty());
         setUpdate_time(ewResult.getUpdateTimeValue());
     }
+
+    public ExecutingOrderDto() {}
 }

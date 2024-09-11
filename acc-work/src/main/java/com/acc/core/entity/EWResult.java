@@ -52,18 +52,10 @@ public class EWResult {
     }
 
     public EWResult(Map<String, Object> item) {
-        // 处理 creator 对象
-        Map<String, Object> creatorMap = JDYServiceImpl.typeConversionMap(item.get("creator"), String.class, Object.class);
-        this.setCreator(new JDYUser(creatorMap));
 
-        // 处理 updater 对象
-        Map<String, Object> updaterMap = JDYServiceImpl.typeConversionMap(item.get("updater"), String.class, Object.class);
-        this.setUpdater(new JDYUser(updaterMap));
-
-        // 处理 deleter 对象 (如果有)
-        Object deleter = item.get("deleter");
-        Map<String, Object> deleterMap = JDYServiceImpl.typeConversionMap(deleter, String.class, Object.class);
-        this.setDeleter(new JDYUser(deleterMap));
+        this.setCreator(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("creator"), String.class, Object.class)));
+        this.setUpdater(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("updater"), String.class, Object.class)));
+        this.setDeleter(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("deleter"), String.class, Object.class)));
 
         this.setCreateTime((String) item.get("createTime"));
         this.setUpdateTime((String) item.get("updateTime"));

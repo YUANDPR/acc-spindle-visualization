@@ -143,18 +143,14 @@ public class JDYServiceImpl implements JDYService {
         try {
             // 解析请求体
             JSONObject payloadJSON = new JSONObject(body);
-            String op = payloadJSON.getString("op");
-            JSONObject data = payloadJSON.getJSONObject("data");
-            log.info("handle Update op:{}", op);
+            log.info("handle Update op:{}", payloadJSON.getString("op"));
 
             // 转换数据
-            executingOrderDto = new ExecutingOrderDto(data);
+            executingOrderDto = new ExecutingOrderDto(payloadJSON.getJSONObject("data"));
             ExecutingOrder executingOrder = orderService.deserializeExecutingOrder(executingOrderDto);
 
             // 查找订单是否存在
-            Optional<ExecutingOrderDto> existingOrder = Optional.ofNullable(executingOrderMapper.getById(executingOrder.getId()));
-
-            if (existingOrder.isPresent()) {
+            if (Optional.ofNullable(executingOrderMapper.getById(executingOrder.getId())).isPresent()) {
                 // 更新现有订单
                 executingOrderMapper.updateExecutingOrder(executingOrderDto);
             } else {
@@ -230,10 +226,10 @@ public class JDYServiceImpl implements JDYService {
             return castList(formDataApiClient
                     .batchDataQuery(new FormDataQueryParam(APP_ID, ENTRY_ID), "v5")
                     .get("data"), Object.class)
-                    .stream()
-                    .map(datum -> typeConversionMap(datum, String.class, Object.class))
-                    .map(EWResult::new)
-                    .collect(Collectors.toList());
+                        .stream()
+                        .map(datum -> typeConversionMap(datum, String.class, Object.class))
+                        .map(EWResult::new)
+                        .collect(Collectors.toList());
         } catch (Exception e) {
             log.error(e.toString());
             return new ArrayList<>();
