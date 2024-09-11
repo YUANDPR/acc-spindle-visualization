@@ -9,6 +9,7 @@ import com.acc.core.entity.ExecutingOrder;
 import com.acc.core.exception.IllegalOrderCorrespondingQuantityException;
 import com.acc.core.exception.OrderNotFoundException;
 import com.acc.mapper.ExecutingOrderMapper;
+import com.acc.model.form.FormDataCreateParam;
 import com.acc.model.form.FormDataQueryParam;
 import com.acc.model.form.FormDataUpdateParam;
 import com.acc.model.form.FormQueryParam;
@@ -21,9 +22,7 @@ import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -38,35 +37,84 @@ public class JDYServiceImpl implements JDYService {
     private static final FormApiClient formApiClient = new FormApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
     private static final FormDataApiClient formDataApiClient = new FormDataApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
 
-    private List<EWResult> currentEWResults;
 
     public JDYServiceImpl(OrderService orderService, ExecutingOrderMapper executingOrderMapper) {
         this.orderService = orderService;
         this.executingOrderMapper = executingOrderMapper;
 
         try {
-            JDYDataPush();
+            testJDY();
+            pushAllData2JDY();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage(), e);
         }
     }
 
-
-    public void JDYDataPush() throws Exception {
+    private void testJDY() throws Exception {
         formWidgets();
         entryList();
-        FormDataQueryParam formDataQueryParam = new FormDataQueryParam(APP_ID, ENTRY_ID);
-        Map<String, Object> v5 = formDataApiClient.batchDataQuery(formDataQueryParam, "v5");
-        List<EWResult> ewResults = parseEWResults(v5);
-        ewResults.forEach(ewResult -> System.out.println(ewResults));
-        currentEWResults = ewResults;
+    }
 
-//        FormDataUpdateParam formDataUpdateParam = new FormDataUpdateParam(APP_ID, ENTRY_ID,);
+    @Override
+    public void pushAllData2JDY() throws Exception {
+        orderService.getAllExecutingOrders()
+                .stream()
+                .map(orderService::serializeExecutingOrder)
+                .forEach(this::updateExecutingOrder);
+    }
+
+    private List<EWResult> getAllData(){
+        FormDataQueryParam formDataQueryParam = new FormDataQueryParam(APP_ID, ENTRY_ID);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            map = formDataApiClient.batchDataQuery(formDataQueryParam, "v5");
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
+        return parseEWResults(map);
+    }
+
+    public void updateExecutingOrder(ExecutingOrderDto executingOrder) {
+        List<EWResult> allData = getAllData();
+        boolean flag = false;
+        for (EWResult allDatum : allData) {
+            if (allDatum.getId() == executingOrder.getId()){
+                flag = true;
+                allDatum.setOrderId(executingOrder.getOrderId());
+                allDatum.setExecutingProcedureId(executingOrder.getExecutingProcedureId());
+                allDatum.setUpdateTime(String.valueOf(executingOrder.getUpdate_time()));
+                if (executingOrder.isExecuting()){
+                    allDatum.setExecuting(Collections.singletonList("executing"));
+                } else {
+                    allDatum.setExecuting(Collections.emptyList());
+                }
+                FormDataUpdateParam formDataUpdateParam = new FormDataUpdateParam(APP_ID, ENTRY_ID, serializeEWResult(allDatum));
+                log.debug(allDatum.toString());
+                try {
+                    formDataApiClient.singleDataUpdate(formDataUpdateParam, "v5");
+                } catch (Exception e) {
+                    log.error(e.toString());
+                }
+
+            }
+        }
+        if (!flag){
+            insertExecutingOrder(executingOrder);
+        }
+    }
+
+    private void insertExecutingOrder(ExecutingOrderDto executingOrder) {
+        FormDataCreateParam formDataCreateParam = new FormDataCreateParam(APP_ID, ENTRY_ID, serializeEO2Map(executingOrder));
+        try {
+            formDataApiClient.singleDataCreate(formDataCreateParam, "v5");
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
     }
 
     private static void formWidgets() throws Exception {
         Map<String, Object> result = formApiClient.formWidgets(APP_ID, ENTRY_ID, null);
-        System.out.println("formWidgets result \n" + result);
+        log.debug("formWidgets result {}", result);
     }
 
     private static void entryList() throws Exception {
@@ -75,7 +123,7 @@ public class JDYServiceImpl implements JDYService {
         queryParam.setLimit(0);
         queryParam.setApp_id(APP_ID);
         Map<String, Object> result = formApiClient.entryList(queryParam, null);
-        System.out.println("entryList result \n" + result);
+        log.debug("entryList result {}", result);
     }
 
     // 签名验证方法
@@ -153,21 +201,21 @@ public class JDYServiceImpl implements JDYService {
         int update_time = data.optInt("update_time", -1);
 
         // 输出日志
-        System.out.println("Processing data_create:");
-        System.out.println("Form Name: " + formName);
-        System.out.println("App ID: " + appId);
-        System.out.println("Entry ID: " + entryId);
-        System.out.println("Creator: " + creatorResult.creatorName() + " (" + creatorResult.creatorUsername() + "), Status: " + creatorResult.creatorStatus());
-        System.out.println("Updater: " + updaterResult.creatorName() + " (" + updaterResult.creatorUsername() + "), Status: " + updaterResult.creatorStatus());
-        System.out.println("Deleter: " + deleterResult.creatorName() + " (" + deleterResult.creatorUsername() + "), Status: " + deleterResult.creatorStatus());
-        System.out.println("Create Time: " + createTime);
-        System.out.println("Update Time: " + updateTime);
-        System.out.println("Delete Time: " + deleteTime);
-        System.out.println("ID: " + id);
-        System.out.println("Order ID: " + orderId);
-        System.out.println("Executing Procedure ID: " + executingProcedureId);
-        System.out.println("Executing: " + executing);
-        System.out.println("Update Time: " + update_time);
+        log.debug("Processing data_create:");
+        log.debug("Form Name: {}", formName);
+        log.debug("App ID: {}", appId);
+        log.debug("Entry ID: {}", entryId);
+        log.debug("Creator: {} ({}), Status: {}", creatorResult.creatorName(), creatorResult.creatorUsername(), creatorResult.creatorStatus());
+        log.debug("Updater: {} ({}), Status: {}", updaterResult.creatorName(), updaterResult.creatorUsername(), updaterResult.creatorStatus());
+        log.debug("Deleter: {} ({}), Status: {}", deleterResult.creatorName(), deleterResult.creatorUsername(), deleterResult.creatorStatus());
+        log.debug("Create Time: {}", createTime);
+        log.debug("Update Time: {}", updateTime);
+        log.debug("Delete Time: {}", deleteTime);
+        log.debug("ID: {}", id);
+        log.debug("Order ID: {}", orderId);
+        log.debug("Executing Procedure ID: {}", executingProcedureId);
+        log.debug("Executing: {}", executing);
+        log.debug("Update Time: {}", update_time);
 
         ExecutingOrderDto executingOrderDto = new ExecutingOrderDto();
         executingOrderDto.setId(id);
@@ -190,7 +238,7 @@ public class JDYServiceImpl implements JDYService {
     }
 
     @Data
-    private class EWResult {
+    private static class EWResult {
         private User creator;
         private User updater;
         private User deleter;
@@ -205,6 +253,8 @@ public class JDYServiceImpl implements JDYService {
         private String _id;
         private String appId;
         private String entryId;
+
+
     }
     @Data
     private static class User {
@@ -262,6 +312,57 @@ public class JDYServiceImpl implements JDYService {
         return ewResults;
     }
 
+    private Map<String, Object> serializeEWResult(EWResult result) {
+        Map<String, Object> item = new HashMap<>();
+
+        // 设置其他简单的字段
+        item.put("id", getSimpleValueMap(result.getId()));
+        item.put("order_id", getSimpleValueMap(result.getOrderId()));
+        item.put("executing_procedure_id", getSimpleValueMap(result.getExecutingProcedureId()));
+        item.put("executing", getSimpleValueMap(result.getExecuting()));
+        item.put("update_time", getSimpleValueMap(result.getUpdateTime()));
+
+        // 将构建好的 Map 对象添加到列表中
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("data", item);
+        ret.put("_id", result.get_id());
+        return ret;
+    }
+
+    private Map<String, Object> serializeEO2Map(ExecutingOrderDto result) {
+        Map<String, Object> item = new HashMap<>();
+
+        // 设置其他简单的字段
+        item.put("id", getSimpleValueMap(result.getId()));
+        item.put("order_id", getSimpleValueMap(result.getOrderId()));
+        item.put("executing_procedure_id", getSimpleValueMap(result.getExecutingProcedureId()));
+
+        if (result.isExecuting()){
+            item.put("executing", Collections.singletonList("executing"));
+        } else {
+            item.put("executing", Collections.emptyList());
+        }
+        item.put("update_time", getSimpleValueMap(result.getUpdate_time()));
+
+        // 将构建好的 Map 对象添加到列表中
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("data", item);
+        return ret;
+    }
+
+    private Map<String, Object> getSimpleValueMap(Object value){
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("value", value);
+        return ret;
+    }
+
+    private Map<String, Object> getOneObjectListValueMap(Object value){
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("value", List.of(value));
+        return ret;
+    }
+
+
     private User parseUser(Map<String, Object> userMap) {
         User user = new User();
         user.setName((String) userMap.get("name"));
@@ -271,4 +372,18 @@ public class JDYServiceImpl implements JDYService {
         user.setDepartments((List<Integer>) userMap.get("departments"));
         return user;
     }
+
+    private Map<String, Object> serializeUser(User user) {
+        Map<String, Object> userMap = new HashMap<>();
+
+        // 将 User 对象的属性存入 Map 中
+        userMap.put("name", user.getName());
+        userMap.put("username", user.getUsername());
+        userMap.put("status", user.getStatus());
+        userMap.put("type", user.getType());
+        userMap.put("departments", user.getDepartments());
+
+        return userMap;
+    }
+
 }

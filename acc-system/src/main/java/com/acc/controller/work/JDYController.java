@@ -53,4 +53,17 @@ public class JDYController {
         }
     }
 
+
+    @GetMapping("/push")
+    @Anonymous
+    public ResponseEntity<?> handleUpdate() {
+        try {
+            jdyService.pushAllData2JDY();
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            log.error("Error while processing update", e);
+            return ResponseEntity.status(400).body("error: " + e.getMessage());
+        }
+    }
+
 }
