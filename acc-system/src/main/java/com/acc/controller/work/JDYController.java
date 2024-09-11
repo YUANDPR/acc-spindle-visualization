@@ -70,7 +70,7 @@ public class JDYController {
     @Anonymous
     public ResponseEntity<?> pull() {
         try {
-            jdyService.pullAllDataFromJDY();
+            jdyService.pullAndMergeAllDataFromJDY();
             return ResponseEntity.ok("success");
         } catch (Exception e) {
             log.error("Error while processing update", e);

@@ -1,7 +1,6 @@
 package com.acc.service;
 
 import com.acc.core.exception.IllegalOrderCorrespondingQuantityException;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 
 public interface JDYService {
     void pushAllData2JDY() throws Exception;
@@ -10,5 +9,5 @@ public interface JDYService {
 
     void handleUpdate(String body) throws IllegalOrderCorrespondingQuantityException;
 
-    void pullAllDataFromJDY();
+    void pullAndMergeAllDataFromJDY();
 }
