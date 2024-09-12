@@ -190,3 +190,9 @@ xss:
 # knife4j配置
 swagger:
   enabled: true
+
+jdy:
+  secret: c3LPBsgMxuvfwKmrVEaFFE2n
+  app-id: 66c98f660039c970b3a1d4f5
+  entry-id: 66e016bf16f0a1ea919ced75
+

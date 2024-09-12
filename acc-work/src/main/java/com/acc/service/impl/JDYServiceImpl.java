@@ -18,6 +18,7 @@ import com.acc.service.JDYService;
 import com.acc.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -34,17 +35,20 @@ public class JDYServiceImpl implements JDYService {
     /**
      * 密钥，用于生成签名。
      */
-    private static final String SECRET = "c3LPBsgMxuvfwKmrVEaFFE2n";
+    @Value("${jdy.secret}")
+    private static String SECRET;
 
     /**
      * JDY 应用 ID。
      */
-    private static final String APP_ID = "66c98f660039c970b3a1d4f5";
+    @Value("${jdy.app-id}")
+    private static String APP_ID;
 
     /**
      * JDY 条目 ID。
      */
-    private static final String ENTRY_ID = "66e016bf16f0a1ea919ced75";
+    @Value("${jdy.entry-id}")
+    private static String ENTRY_ID;
 
     private final OrderService orderService;
     private final ExecutingOrderMapper executingOrderMapper;
@@ -61,7 +65,7 @@ public class JDYServiceImpl implements JDYService {
         this.orderService = orderService;
         this.executingOrderMapper = executingOrderMapper;
         try {
-            testJDY();
+//            testJDY();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
