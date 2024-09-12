@@ -85,8 +85,7 @@ public class FormDataApiClient extends ApiClient {
         String path = this.generatePath(version, "update");
         // 请求参数 将 queryParam 里面的属性转换成map
         Map<String, Object> data =
-                new ObjectMapper().convertValue(updateParam, new TypeReference<Map<String, Object>>() {
-                });
+                new ObjectMapper().convertValue(updateParam, new TypeReference<>() {});
         HttpRequestParam param = new HttpRequestParam(path, data);
         return this.sendPostRequest(param);
     }

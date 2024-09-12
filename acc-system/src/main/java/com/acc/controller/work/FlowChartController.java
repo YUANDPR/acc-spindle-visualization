@@ -15,4 +15,5 @@ public class FlowChartController {
     public String index() {
         return "flow";
     }
+
 }

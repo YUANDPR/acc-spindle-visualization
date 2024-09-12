@@ -32,7 +32,7 @@ public class FormDataCreateParam {
     public FormDataCreateParam(String app_id, String entry_id, Map<String, Object> data) {
         this.app_id = app_id;
         this.entry_id = entry_id;
-        this.data = data;
+        this.data = (Map<String, Object>) data.get("data");
     }
 
     public String getApp_id() {

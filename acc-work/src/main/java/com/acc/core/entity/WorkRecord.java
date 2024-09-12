@@ -1,7 +1,9 @@
 package com.acc.core.entity;
 
+import com.acc.core.dto.ExecutingOrderDto;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,6 +26,7 @@ public class WorkRecord {
         this.time = time;
         this.startOrFinish = startOrFinish;
     }
+
 
     private static int generateUniqueId() {
         return (int) (System.currentTimeMillis() / 1000L) % Integer.MAX_VALUE + counter.getAndIncrement();
