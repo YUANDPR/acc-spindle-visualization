@@ -76,7 +76,7 @@ public class EWResult {
     public void adjustFromExecutingOrderDto(ExecutingOrderDto executingOrder) {
         setOrderId(executingOrder.getOrderId());
         setExecutingProcedureId(executingOrder.getExecutingProcedureId());
-        setUpdateTime(String.valueOf(executingOrder.getUpdate_time()));
+        setUpdateTime(String.valueOf(executingOrder.getUpdateTime()));
         if (executingOrder.isExecuting()){
             setExecuting(Collections.singletonList("executing"));
         } else {
