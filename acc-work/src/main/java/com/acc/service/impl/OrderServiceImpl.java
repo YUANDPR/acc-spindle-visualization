@@ -181,9 +181,9 @@ public class OrderServiceImpl implements OrderService {
         }
         ExecutingOrder executingOrder = new ExecutingOrder(order);
         executingOrder.setId(dto.getId());
-        if (dto.getUpdate_time() == null) executingOrder.setStateUpdateTime(LocalDateTime.now());
+        if (dto.getUpdateTime() == null) executingOrder.setStateUpdateTime(LocalDateTime.now());
         else
-            executingOrder.setStateUpdateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(dto.getUpdate_time()), ZoneId.systemDefault()));
+            executingOrder.setStateUpdateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(dto.getUpdateTime().getTime()), ZoneId.systemDefault()));
         List<WorkProcedure> list = getWorkProcedures(order);
 
         Queue<WorkProcedure> waitingQueue = new LinkedList<>();
@@ -277,7 +277,7 @@ public class OrderServiceImpl implements OrderService {
             dto.setId(executingOrder.getId());
         } else dto.generateUniqueId();
         dto.setOrderId(executingOrder.getOrder().getId());
-        dto.setUpdate_time(executingOrder.getStateUpdateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        dto.setUpdateTime(new Date(executingOrder.getStateUpdateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
         WorkProcedure currentExecuting = executingOrder.getExecuting();
         if (currentExecuting != null) {
             log.debug("current executing: {}", currentExecuting.getDescription());

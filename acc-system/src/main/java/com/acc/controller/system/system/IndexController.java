@@ -83,10 +83,10 @@ public class IndexController extends BaseController {
      * 系统介绍
      */
     @GetMapping("/system/main")
-    @ApiOperation("获取系统介绍主页面")
+    @ApiOperation("获取主页面")
     public String main(ModelMap mmap) {
         mmap.put("version", AccConfig.getVersion());
-        return "/report/echarts.html";
+        return "/screen";
     }
 
     // content-main class

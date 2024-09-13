@@ -28,29 +28,6 @@ public class EWResult {
     private String appId;
     private String entryId;
 
-    public static Map<String, Object> getSimpleValueMap(Object value){
-        Map<String, Object> ret = new HashMap<>();
-        ret.put("value", value);
-        return ret;
-    }
-
-    public Map<String, Object> toMap() {
-        Map<String, Object> item = new HashMap<>();
-
-        // 设置其他简单的字段
-        item.put("id", getSimpleValueMap(this.getId()));
-        item.put("order_id", getSimpleValueMap(this.getOrderId()));
-        item.put("executing_procedure_id", getSimpleValueMap(this.getExecutingProcedureId()));
-        item.put("executing", getSimpleValueMap(this.getExecuting()));
-        item.put("update_time", getSimpleValueMap(this.getUpdateTime()));
-
-        // 将构建好的 Map 对象添加到列表中
-        HashMap<String, Object> ret = new HashMap<>();
-        ret.put("data", item);
-        ret.put("_id", this.get_id());
-        return ret;
-    }
-
     public EWResult(Map<String, Object> item) {
 
         this.setCreator(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("creator"), String.class, Object.class)));
@@ -73,11 +50,34 @@ public class EWResult {
 
     }
 
+    public static Map<String, Object> getSimpleValueMap(Object value) {
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("value", value);
+        return ret;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> item = new HashMap<>();
+
+        // 设置其他简单的字段
+        item.put("id", getSimpleValueMap(this.getId()));
+        item.put("order_id", getSimpleValueMap(this.getOrderId()));
+        item.put("executing_procedure_id", getSimpleValueMap(this.getExecutingProcedureId()));
+        item.put("executing", getSimpleValueMap(this.getExecuting()));
+        item.put("update_time", getSimpleValueMap(this.getUpdateTime()));
+
+        // 将构建好的 Map 对象添加到列表中
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("data", item);
+        ret.put("_id", this.get_id());
+        return ret;
+    }
+
     public void adjustFromExecutingOrderDto(ExecutingOrderDto executingOrder) {
         setOrderId(executingOrder.getOrderId());
         setExecutingProcedureId(executingOrder.getExecutingProcedureId());
-        setUpdateTime(String.valueOf(executingOrder.getUpdate_time()));
-        if (executingOrder.isExecuting()){
+        setUpdateTime(String.valueOf(executingOrder.getUpdateTime()));
+        if (executingOrder.isExecuting()) {
             setExecuting(Collections.singletonList("executing"));
         } else {
             setExecuting(Collections.emptyList());

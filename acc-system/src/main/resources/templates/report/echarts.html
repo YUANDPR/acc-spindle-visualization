@@ -36,19 +36,21 @@
                             </a>
                         </div>
                     </div>
-                    <table id="data-table">
-                        <thead>
-                        <tr>
-                            <th>工单编号</th>
-                            <th>正在执行工序号</th>
-                            <th>更新时间</th>
-                            <th>工序执行状态</th>
-                        </tr>
-                        </thead>
-                        <tbody id="data-body">
-                        <!-- 数据行将在这里动态添加 -->
-                        </tbody>
-                    </table>
+                    <div class="ibox-content">
+                        <table id="data-table">
+                            <thead>
+                            <tr>
+                                <th>工单编号</th>
+                                <th>正在执行工序号</th>
+                                <th>更新时间</th>
+                                <th>工序执行状态</th>
+                            </tr>
+                            </thead>
+                            <tbody id="data-body">
+                            <!-- 数据行将在这里动态添加 -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -59,15 +61,6 @@
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="javascript:">选项1</a>
-                                </li>
-                                <li><a href="javascript:">选项2</a>
-                                </li>
-                            </ul>
                             <a class="close-link">
                                 <i class="fa fa-times"></i>
                             </a>
@@ -86,15 +79,6 @@
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="javascript:">选项1</a>
-                                </li>
-                                <li><a href="javascript:">选项2</a>
-                                </li>
-                            </ul>
                             <a class="close-link">
                                 <i class="fa fa-times"></i>
                             </a>
@@ -112,6 +96,21 @@
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: echarts-js"/>
 <script type="text/javascript">
+    $(".modal").appendTo("body"), $("[data-toggle=popover]").popover(), $(".collapse-link").click(function () {
+        var div_ibox = $(this).closest("div.ibox"),
+            e = $(this).find("i"),
+            i = div_ibox.find("div.ibox-content");
+        i.slideToggle(200),
+            e.toggleClass("fa-chevron-up").toggleClass("fa-chevron-down"),
+            div_ibox.toggleClass("").toggleClass("border-bottom"),
+            setTimeout(function () {
+                div_ibox.resize();
+            }, 50);
+    }), $(".close-link").click(function () {
+        var div_ibox = $(this).closest("div.ibox");
+        div_ibox.remove()
+    });
+
     $(function () {
         // 获取表格元素
         const tableBody = document.getElementById('data-body');
