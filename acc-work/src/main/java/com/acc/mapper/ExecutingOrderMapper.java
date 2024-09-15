@@ -34,7 +34,7 @@ public interface ExecutingOrderMapper {
      * @param executingOrderDto 执行订单数据传输对象
      */
     @Insert("INSERT INTO work_executing_order (id, order_id, executing_procedure_id, executing, update_time) " +
-            "VALUES (#{id}, #{orderId}, #{executingProcedureId}, #{executing}, #{update_time})")
+            "VALUES (#{id}, #{orderId}, #{executingProcedureId}, #{executing}, #{updateTime})")
     void insertExecutingOrder(ExecutingOrderDto executingOrderDto);
 
     /**
@@ -46,7 +46,7 @@ public interface ExecutingOrderMapper {
             "order_id = #{orderId}, " +
             "executing_procedure_id = #{executingProcedureId}, " +
             "executing = #{executing}, " +
-            "update_time = #{update_time} " +
+            "update_time = #{updateTime} " +
             "WHERE id = #{id}")
     void updateExecutingOrder(ExecutingOrderDto executingOrderDto);
 

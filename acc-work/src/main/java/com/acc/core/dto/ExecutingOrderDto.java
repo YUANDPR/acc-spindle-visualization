@@ -23,31 +23,6 @@ public class ExecutingOrderDto {
     boolean executing;
     Date updateTime;
 
-    public ExecutingOrderDto(JSONObject data) {
-        int id = data.optInt("id", -1);
-        String orderId = data.optString("order_id", null);
-        String executingProcedureId = data.optString("executing_procedure_id", null);
-        boolean executing = data.optJSONArray("executing").length() == 1;  // 数组
-        int updateTime = data.optInt("updateTime", -1);
-
-        setId(id);
-        setOrderId(Integer.parseInt(orderId));
-        setExecuting(executing);
-        setUpdateTime(new Date(updateTime));
-        setExecutingProcedureId(Integer.parseInt(executingProcedureId));
-    }
-
-    public ExecutingOrderDto(EWResult ewResult) {
-        setId(ewResult.getId());
-        setOrderId(ewResult.getOrderId());
-        setExecutingProcedureId(ewResult.getExecutingProcedureId());
-        setExecuting(ewResult.getExecuting() != null && !ewResult.getExecuting().isEmpty());
-        setUpdateTime(new Date(ewResult.getUpdateTimeValue()));
-    }
-
-    public ExecutingOrderDto() {
-    }
-
     public void generateUniqueId() {
         this.id = (int) ((System.currentTimeMillis() / 1000L) % Integer.MAX_VALUE + counter.getAndIncrement());
     }
@@ -79,16 +54,48 @@ public class ExecutingOrderDto {
         item.put("order_id", getSimpleValueMap(this.getOrderId()));
         item.put("executing_procedure_id", getSimpleValueMap(this.getExecutingProcedureId()));
 
-        if (this.isExecuting()) {
+        if (this.isExecuting()){
             item.put("executing", Collections.singletonList("executing"));
         } else {
             item.put("executing", Collections.emptyList());
         }
-        item.put("updateTime", getSimpleValueMap(this.getUpdateTime()));
+        item.put("update_time", getSimpleValueMap(this.getUpdateTime()));
 
         // 将构建好的 Map 对象添加到列表中
         HashMap<String, Object> ret = new HashMap<>();
         ret.put("data", item);
         return ret;
     }
+
+    public ExecutingOrderDto (JSONObject data) {
+        int id = data.optInt("id", -1);
+        String orderId = data.optString("order_id", null);
+        String executingProcedureId = data.optString("executing_procedure_id", null);
+        boolean executing = data.optJSONArray("executing").length() == 1;  // 数组
+        int update_time = data.optInt("update_time", -1);
+
+        setId(id);
+        setOrderId(Integer.parseInt(orderId));
+        setExecuting(executing);
+        setUpdateTime(update_time);
+        setExecutingProcedureId(Integer.parseInt(executingProcedureId));
+    }
+
+    public ExecutingOrderDto(EWResult ewResult) {
+        setId(ewResult.getId());
+        setOrderId(ewResult.getOrderId());
+        setExecutingProcedureId(ewResult.getExecutingProcedureId());
+        setExecuting(ewResult.getExecuting() != null && !ewResult.getExecuting().isEmpty());
+        setUpdateTime(ewResult.getUpdateTimeValue());
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = new Date(updateTime);
+    }
+
+    public Long getUpdateTime() {
+        return updateTime.getTime();
+    }
+
+    public ExecutingOrderDto() {}
 }

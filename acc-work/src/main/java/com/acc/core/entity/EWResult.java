@@ -28,29 +28,7 @@ public class EWResult {
     private String appId;
     private String entryId;
 
-    public EWResult(Map<String, Object> item) {
-
-        this.setCreator(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("creator"), String.class, Object.class)));
-        this.setUpdater(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("updater"), String.class, Object.class)));
-        this.setDeleter(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("deleter"), String.class, Object.class)));
-
-        this.setCreateTime((String) item.get("createTime"));
-        this.setUpdateTime((String) item.get("updateTime"));
-        this.setDeleteTime((String) item.get("deleteTime"));
-
-        this.setId((Integer) item.get("id"));
-        this.setOrderId(Integer.parseInt((String) item.get("order_id")));
-        this.setExecutingProcedureId(Integer.parseInt((String) item.get("executing_procedure_id")));
-        this.setExecuting(JDYServiceImpl.castList(item.get("executing"), Object.class));
-        this.setUpdateTimeValue(Long.valueOf((item.get("update_time").toString())));
-
-        this.set_id((String) item.get("_id"));
-        this.setAppId((String) item.get("appId"));
-        this.setEntryId((String) item.get("entryId"));
-
-    }
-
-    public static Map<String, Object> getSimpleValueMap(Object value) {
+    public static Map<String, Object> getSimpleValueMap(Object value){
         Map<String, Object> ret = new HashMap<>();
         ret.put("value", value);
         return ret;
@@ -73,11 +51,33 @@ public class EWResult {
         return ret;
     }
 
+    public EWResult(Map<String, Object> item) {
+
+        this.setCreator(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("creator"), String.class, Object.class)));
+        this.setUpdater(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("updater"), String.class, Object.class)));
+        this.setDeleter(new JDYUser(JDYServiceImpl.typeConversionMap(item.get("deleter"), String.class, Object.class)));
+
+        this.setCreateTime((String) item.get("createTime"));
+        this.setUpdateTime((String) item.get("updateTime"));
+        this.setDeleteTime((String) item.get("deleteTime"));
+
+        this.setId((Integer) item.get("id"));
+        this.setOrderId(Integer.parseInt((String) item.get("order_id")));
+        this.setExecutingProcedureId(Integer.parseInt((String) item.get("executing_procedure_id")));
+        this.setExecuting(JDYServiceImpl.castList(item.get("executing"), Object.class));
+        this.setUpdateTimeValue(Long.valueOf((item.get("update_time").toString())));
+
+        this.set_id((String) item.get("_id"));
+        this.setAppId((String) item.get("appId"));
+        this.setEntryId((String) item.get("entryId"));
+
+    }
+
     public void adjustFromExecutingOrderDto(ExecutingOrderDto executingOrder) {
         setOrderId(executingOrder.getOrderId());
         setExecutingProcedureId(executingOrder.getExecutingProcedureId());
         setUpdateTime(String.valueOf(executingOrder.getUpdateTime()));
-        if (executingOrder.isExecuting()) {
+        if (executingOrder.isExecuting()){
             setExecuting(Collections.singletonList("executing"));
         } else {
             setExecuting(Collections.emptyList());
