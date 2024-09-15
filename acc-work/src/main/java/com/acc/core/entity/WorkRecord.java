@@ -1,9 +1,7 @@
 package com.acc.core.entity;
 
-import com.acc.core.dto.ExecutingOrderDto;
 import lombok.Data;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 

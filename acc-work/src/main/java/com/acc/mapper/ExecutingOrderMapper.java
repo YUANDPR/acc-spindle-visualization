@@ -23,7 +23,7 @@ public interface ExecutingOrderMapper {
      * 通过订单ID获取执行订单列表
      *
      * @param orderId 订单ID
-     * @return 执行订单数据传输对象列表(List<ExecutingOrderDto>)
+     * @return 执行订单数据传输对象列表(List < ExecutingOrderDto >)
      */
     @Select("SELECT * FROM work_executing_order WHERE order_id = #{orderId}")
     List<ExecutingOrderDto> getByOrderId(int orderId);
@@ -69,7 +69,7 @@ public interface ExecutingOrderMapper {
     /**
      * 获取所有执行订单信息
      *
-     * @return 所有执行订单的数据传输对象列表(List<ExecutingOrderDto>)
+     * @return 所有执行订单的数据传输对象列表(List < ExecutingOrderDto >)
      */
     @Select("SELECT * FROM work_executing_order")
     List<ExecutingOrderDto> findAllExecutingOrders();

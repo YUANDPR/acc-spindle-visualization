@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 /**
  * JDY 服务实现类，负责与 JDY API 交互并处理执行订单相关的操作。
  */
@@ -32,28 +33,25 @@ import java.util.stream.Collectors;
 @Service
 public class JDYServiceImpl implements JDYService {
 
+    private static final FormApiClient formApiClient = new FormApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
+    private static final FormDataApiClient formDataApiClient = new FormDataApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
     /**
      * 密钥，用于生成签名。
      */
     @Value("${jdy.secret}")
     private static String SECRET;
-
     /**
      * JDY 应用 ID。
      */
     @Value("${jdy.app-id}")
     private static String APP_ID;
-
     /**
      * JDY 条目 ID。
      */
     @Value("${jdy.entry-id}")
     private static String ENTRY_ID;
-
     private final OrderService orderService;
     private final ExecutingOrderMapper executingOrderMapper;
-    private static final FormApiClient formApiClient = new FormApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
-    private static final FormDataApiClient formDataApiClient = new FormDataApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
 
     /**
      * 构造方法，注入依赖并测试与 JDY API 的连接。
@@ -69,6 +67,45 @@ public class JDYServiceImpl implements JDYService {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    /**
+     * 将对象转换为指定类型的列表。
+     *
+     * @param obj   原对象
+     * @param clazz 目标类的类型
+     * @param <T>   目标类型
+     * @return 转换后的列表
+     */
+    public static <T> List<T> castList(Object obj, Class<T> clazz) {
+        List<T> result = new ArrayList<>();
+        if (obj instanceof List<?>) {
+            for (Object o : (List<?>) obj) {
+                result.add(clazz.cast(o));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 将 Map 的键值对转换为指定类型。
+     *
+     * @param obj    原对象
+     * @param tClass 目标键类型
+     * @param vClass 目标值类型
+     * @param <K>    键类型
+     * @param <V>    值类型
+     * @return 转换后的 Map
+     */
+    public static <K, V> Map<K, V> typeConversionMap(Object obj, Class<K> tClass, Class<V> vClass) {
+        HashMap<K, V> result = new HashMap<>();
+        if (obj instanceof Map<?, ?>) {
+            Map<?, ?> map = (Map<?, ?>) (obj);
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                result.put(tClass.cast(entry.getKey()), vClass.cast(entry.getValue()));
+            }
+        }
+        return result;
     }
 
     /**
@@ -182,45 +219,6 @@ public class JDYServiceImpl implements JDYService {
     }
 
     /**
-     * 将对象转换为指定类型的列表。
-     *
-     * @param obj   原对象
-     * @param clazz 目标类的类型
-     * @param <T>   目标类型
-     * @return 转换后的列表
-     */
-    public static <T> List<T> castList(Object obj, Class<T> clazz) {
-        List<T> result = new ArrayList<>();
-        if (obj instanceof List<?>) {
-            for (Object o : (List<?>) obj) {
-                result.add(clazz.cast(o));
-            }
-        }
-        return result;
-    }
-
-    /**
-     * 将 Map 的键值对转换为指定类型。
-     *
-     * @param obj    原对象
-     * @param tClass 目标键类型
-     * @param vClass 目标值类型
-     * @param <K>    键类型
-     * @param <V>    值类型
-     * @return 转换后的 Map
-     */
-    public static <K, V> Map<K, V> typeConversionMap(Object obj, Class<K> tClass, Class<V> vClass) {
-        HashMap<K, V> result = new HashMap<>();
-        if (obj instanceof Map<?, ?>) {
-            Map<?, ?> map = (Map<?, ?>) (obj);
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                result.put(tClass.cast(entry.getKey()), vClass.cast(entry.getValue()));
-            }
-        }
-        return result;
-    }
-
-    /**
      * 从 JDY 获取所有数据并将其转换为 EWResult 对象列表。
      *
      * @return 转换后的 EWResult 列表
@@ -230,10 +228,10 @@ public class JDYServiceImpl implements JDYService {
             return castList(formDataApiClient
                     .batchDataQuery(new FormDataQueryParam(APP_ID, ENTRY_ID), "v5")
                     .get("data"), Object.class)
-                        .stream()
-                        .map(datum -> typeConversionMap(datum, String.class, Object.class))
-                        .map(EWResult::new)
-                        .collect(Collectors.toList());
+                    .stream()
+                    .map(datum -> typeConversionMap(datum, String.class, Object.class))
+                    .map(EWResult::new)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             log.error(e.toString());
             return new ArrayList<>();

@@ -20,7 +20,7 @@ public interface OrderService {
      *
      * @param orderId 订单ID
      * @return 工单ID
-     * @throws OrderNotFoundException 当订单不存在时抛出异常
+     * @throws OrderNotFoundException                     当订单不存在时抛出异常
      * @throws IllegalOrderCorrespondingQuantityException 当订单对应数量不合法时抛出异常
      */
     int getUniqueWorkOrderId(int orderId) throws OrderNotFoundException, IllegalOrderCorrespondingQuantityException;
@@ -31,7 +31,7 @@ public interface OrderService {
      * @param id 订单ID
      * @return 执行中的订单
      * @throws IllegalOrderCorrespondingQuantityException 当订单对应数量不合法时抛出异常
-     * @throws OrderNotFoundException 当订单不存在时抛出异常
+     * @throws OrderNotFoundException                     当订单不存在时抛出异常
      */
     ExecutingOrder getExecutingOrderByOrderId(int id) throws IllegalOrderCorrespondingQuantityException, OrderNotFoundException;
 
@@ -48,7 +48,7 @@ public interface OrderService {
      *
      * @param orderId 订单ID
      * @return 工作流程列表
-     * @throws OrderNotFoundException 当订单不存在时抛出异常
+     * @throws OrderNotFoundException                     当订单不存在时抛出异常
      * @throws IllegalOrderCorrespondingQuantityException 当订单对应数量不合法时抛出异常
      */
     List<WorkProcedure> getWorkProcedure(int orderId) throws OrderNotFoundException, IllegalOrderCorrespondingQuantityException;
@@ -74,8 +74,8 @@ public interface OrderService {
      * 更新执行中的订单状态
      *
      * @param username 用户名
-     * @param orderId 订单ID
-     * @throws OrderNotFoundException 当订单不存在时抛出异常
+     * @param orderId  订单ID
+     * @throws OrderNotFoundException                     当订单不存在时抛出异常
      * @throws IllegalOrderCorrespondingQuantityException 当订单对应数量不合法时抛出异常
      */
     void updateExecutingOrderState(String username, int orderId) throws OrderNotFoundException, IllegalOrderCorrespondingQuantityException;
@@ -85,7 +85,7 @@ public interface OrderService {
      *
      * @param orderId 订单ID
      * @return 工单
-     * @throws OrderNotFoundException 当订单不存在时抛出异常
+     * @throws OrderNotFoundException                     当订单不存在时抛出异常
      * @throws IllegalOrderCorrespondingQuantityException 当订单对应数量不合法时抛出异常
      */
     WorkOrder getWorkOrderByOrderId(int orderId) throws OrderNotFoundException, IllegalOrderCorrespondingQuantityException;
@@ -95,7 +95,7 @@ public interface OrderService {
      *
      * @param orderId 订单ID
      * @return 执行订单DTO
-     * @throws OrderNotFoundException 当订单不存在时抛出异常
+     * @throws OrderNotFoundException                     当订单不存在时抛出异常
      * @throws IllegalOrderCorrespondingQuantityException 当订单对应数量不合法时抛出异常
      */
     ExecutingOrderDto getExecutingOrderDtoByOrderId(int orderId) throws OrderNotFoundException, IllegalOrderCorrespondingQuantityException;
