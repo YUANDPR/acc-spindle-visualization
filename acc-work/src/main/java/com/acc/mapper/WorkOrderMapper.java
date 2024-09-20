@@ -26,6 +26,20 @@ public interface WorkOrderMapper {
     List<WorkOrder> selectWorkOrderList(WorkOrder workOrder);
 
     /**
+     * 查询等待加工生产工单列表
+     *
+     * @return 生产工单集合
+     */
+    List<WorkOrder> selectNewWorkOrderList();
+
+    /**
+     * 查询等待加工生产工单总数
+     *
+     * @return 生产工单集合
+     */
+    int selectWorkOrderNumber();
+
+    /**
      * 新增生产工单
      *
      * @param workOrder 生产工单
@@ -56,4 +70,11 @@ public interface WorkOrderMapper {
      * @return 结果
      */
     int deleteWorkOrderByIds(String[] ids);
+
+    /**
+     * 查询以完成订单数
+     *
+     * @return 结果
+     */
+    int selectFinishWorkOrderNumber();
 }

@@ -485,30 +485,49 @@ a:hover {
 }
 
 .wrap {
-    height: 2.54rem;
-    overflow: hidden;
+    max-height: 5rem;
+    overflow: auto; /* 使用自动滚动代替隐藏，以便查看超出的内容 */
+    border: 1px solid #ccc; /* 可选：添加边框 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 增加阴影效果 */
+    font-size: 0.15rem; /* 减小字体大小 */
+    background-color: rgba(211, 211, 255, 0.8); /* 浅紫色半透明背景 */
+    color: #333; /* 文字颜色 */
 }
 
-.wrap li {
-    line-height: .42rem;
-    height: .42rem;
-    font-size: .18rem;
-    text-indent: .24rem;
-    margin-bottom: .1rem;
+.wrap table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.wrap li p {
-    border: 1px solid rgba(25, 186, 139, .17);
-    color: rgba(255, 255, 255, .6);
+.wrap thead {
+    position: sticky; /* 让表头保持在顶部 */
+    top: 0; /* 距离顶部的距离 */
+    background-color: rgba(45, 25, 85); /* 深紫色背景 */
+    z-index: 1; /* 提升层级，防止被其他元素覆盖 */
+    color: #fff; /* 表头文字颜色 */
+    font-size: 0.2rem; /* 增大表头字体大小 */
 }
 
-.sy {
-    float: left;
-    width: 33%;
-    height: 2.2rem;
-    margin-top: -.25rem;
+.wrap th, .wrap td {
+    text-align: center;
+    padding: 0.1rem; /* 减小内边距 */
+    border: 1px solid rgba(90, 50, 165, 0.5); /* 更淡的边框颜色 */
 }
 
+.wrap th {
+    background-color: rgba(45, 25, 85); /* 深紫色背景 */
+    color: #fff; /* 表头文字颜色 */
+    font-size: 0.2rem; /* 增大表头字体大小 */
+}
+
+.wrap td {
+    color: rgba(51, 51, 51, 0.8); /* 数据单元格文字颜色 */
+}
+
+/* 添加悬停效果 */
+.wrap tr:hover {
+    background-color: rgba(98, 84, 243, 0.8); /* 鼠标悬停时的背景色 */
+}
 
 .adduser {
     height: 1.5rem;

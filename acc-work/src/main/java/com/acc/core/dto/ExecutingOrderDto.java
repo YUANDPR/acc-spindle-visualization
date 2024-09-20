@@ -59,7 +59,7 @@ public class ExecutingOrderDto {
         } else {
             item.put("executing", Collections.emptyList());
         }
-        item.put("update_time", getSimpleValueMap(this.getUpdateTime()));
+        item.put("update_time", getSimpleValueMap(this.getCustomUpdateTime()));
 
         // 将构建好的 Map 对象添加到列表中
         HashMap<String, Object> ret = new HashMap<>();
@@ -77,7 +77,7 @@ public class ExecutingOrderDto {
         setId(id);
         setOrderId(Integer.parseInt(orderId));
         setExecuting(executing);
-        setUpdateTime(update_time);
+        setCustomUpdateTime(update_time);
         setExecutingProcedureId(Integer.parseInt(executingProcedureId));
     }
 
@@ -86,14 +86,14 @@ public class ExecutingOrderDto {
         setOrderId(ewResult.getOrderId());
         setExecutingProcedureId(ewResult.getExecutingProcedureId());
         setExecuting(ewResult.getExecuting() != null && !ewResult.getExecuting().isEmpty());
-        setUpdateTime(ewResult.getUpdateTimeValue());
+        setCustomUpdateTime(ewResult.getUpdateTimeValue());
     }
 
-    public void setUpdateTime(long updateTime) {
+    public void setCustomUpdateTime(long updateTime) {
         this.updateTime = new Date(updateTime);
     }
 
-    public Long getUpdateTime() {
+    public Long getCustomUpdateTime() {
         return updateTime.getTime();
     }
 

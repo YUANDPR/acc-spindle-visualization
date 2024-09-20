@@ -47,6 +47,21 @@
         where id = #{id}
     </select>
 
+    <select id="selectNewWorkOrderList" resultType="com.acc.core.entity.WorkOrder">
+        <include refid="selectWorkOrderVo"/>
+        where DATE(start_time) >= CURDATE();
+    </select>
+    <select id="selectWorkOrderNumber" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM work_order
+        WHERE DATE(start_time) >= CURDATE();
+    </select>
+    <select id="selectFinishWorkOrderNumber" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM work_order
+        WHERE is_finish = 1;
+    </select>
+
     <insert id="insertWorkOrder" parameterType="WorkOrder" useGeneratedKeys="true"
             keyProperty="id">
         insert into work_order
