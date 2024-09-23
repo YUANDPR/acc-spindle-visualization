@@ -52,7 +52,7 @@ public class EChartsController extends BaseController {
 
     @GetMapping("/screen")
     public String getScreen() {
-        return "/screen";
+        return "screen";
     }
 
 }

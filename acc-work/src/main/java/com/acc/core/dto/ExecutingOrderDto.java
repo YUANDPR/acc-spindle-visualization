@@ -3,7 +3,7 @@ package com.acc.core.dto;
 import com.acc.core.entity.EWResult;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.Date;
