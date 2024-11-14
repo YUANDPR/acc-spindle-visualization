@@ -16,6 +16,7 @@ import com.acc.model.form.FormDataUpdateParam;
 import com.acc.model.form.FormQueryParam;
 import com.acc.service.JDYService;
 import com.acc.service.OrderService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,17 +40,17 @@ public class JDYServiceImpl implements JDYService {
      * 密钥，用于生成签名。
      */
     @Value("${jdy.secret}")
-    private static String SECRET;
+    private String SECRET;
     /**
      * JDY 应用 ID。
      */
     @Value("${jdy.app-id}")
-    private static String APP_ID;
+    private String APP_ID;
     /**
      * JDY 条目 ID。
      */
     @Value("${jdy.entry-id}")
-    private static String ENTRY_ID;
+    private String ENTRY_ID;
     private final OrderService orderService;
     private final ExecutingOrderMapper executingOrderMapper;
 
@@ -97,13 +98,18 @@ public class JDYServiceImpl implements JDYService {
      * @param <V>    值类型
      * @return 转换后的 Map
      */
-    public static <K, V> Map<K, V> typeConversionMap(Object obj, Class<K> tClass, Class<V> vClass) {
+    public static <K, V> Map<K, V> typeConversionMap(Object obj, Class<K> tClass, Class<V> vClass) throws ClassCastException {
         HashMap<K, V> result = new HashMap<>();
-        if (obj instanceof Map<?, ?>) {
-            Map<?, ?> map = (Map<?, ?>) (obj);
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                result.put(tClass.cast(entry.getKey()), vClass.cast(entry.getValue()));
+        try {
+            if (obj instanceof Map<?, ?>) {
+                Map<?, ?> map = (Map<?, ?>) (obj);
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    result.put(tClass.cast(entry.getKey()), vClass.cast(entry.getValue()));
+                }
             }
+        } catch (Exception e) {
+            log.error("Error converting map to {} to {}", obj.getClass().getName(), vClass.getName());
+            throw new ClassCastException(tClass.getName() + " cannot be cast to " + vClass.getName());
         }
         return result;
     }
@@ -132,12 +138,19 @@ public class JDYServiceImpl implements JDYService {
         orderService.getAllExecutingOrders()
                 .stream()
                 .map(orderService::serializeExecutingOrder)
-                .forEach(this::updateExecutingOrderToJDY);
+                .forEach(executingOrder -> {
+                    try {
+                        updateExecutingOrderToJDY(executingOrder);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     /**
      * 从 JDY 获取所有数据并将其与本地订单数据合并，更新或插入新的订单。
      */
+    @SneakyThrows
     @Override
     public void pullAndMergeAllDataFromJDY() {
         List<EWResult> allData = getAllDataFromJDY();
@@ -178,7 +191,7 @@ public class JDYServiceImpl implements JDYService {
      * @throws IllegalOrderCorrespondingQuantityException 如果订单ID对应多个工单，抛出异常
      */
     @Override
-    public void handleUpdate(String body) throws IllegalOrderCorrespondingQuantityException {
+    public void handleUpdate(String body) throws IllegalOrderCorrespondingQuantityException, JSONException, OrderNotFoundException {
         ExecutingOrderDto executingOrderDto = null;
 
         try {
@@ -208,13 +221,16 @@ public class JDYServiceImpl implements JDYService {
             }
         } catch (JSONException e) {
             log.error("Failed to parse JSON body: {}", e.getMessage(), e);
+            throw e;
         } catch (OrderNotFoundException e) {
             log.error("Order not found for ID: {}", e.getMessage(), e);
+            throw e;
         } catch (IllegalOrderCorrespondingQuantityException e) {
             log.error("Multiple orders found for orderId: {}", executingOrderDto.getOrderId(), e);
             throw e;
         } catch (Exception e) {
             log.error("Unexpected error while handling update: {}", e.getMessage(), e);
+            throw e;
         }
     }
 
@@ -223,7 +239,7 @@ public class JDYServiceImpl implements JDYService {
      *
      * @return 转换后的 EWResult 列表
      */
-    private List<EWResult> getAllDataFromJDY() {
+    private List<EWResult> getAllDataFromJDY() throws RuntimeException {
         try {
             return castList(formDataApiClient
                     .batchDataQuery(new FormDataQueryParam(APP_ID, ENTRY_ID), "v5")
@@ -233,8 +249,8 @@ public class JDYServiceImpl implements JDYService {
                     .map(EWResult::new)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            log.error(e.toString());
-            return new ArrayList<>();
+            log.error("Failed to parse JDY data: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to parse JDY data: " + e.getMessage());
         }
     }
 
@@ -243,7 +259,7 @@ public class JDYServiceImpl implements JDYService {
      *
      * @param executingOrder 执行订单对象
      */
-    public void updateExecutingOrderToJDY(ExecutingOrderDto executingOrder) {
+    public void updateExecutingOrderToJDY(ExecutingOrderDto executingOrder) throws Exception {
 
         // 使用流式处理查找是否有匹配的ID
         Optional<EWResult> matchingDatum = getAllDataFromJDY()
@@ -261,6 +277,7 @@ public class JDYServiceImpl implements JDYService {
                 formDataApiClient.singleDataUpdate(formDataUpdateParam, "v5");
             } catch (Exception e) {
                 log.error("Error updating data: {}", e.getMessage(), e);
+                throw new Exception(String.format("Error updating data: %s", e.getMessage()));
             }
         } else {
             // 如果不存在匹配的 ID，则插入新的数据
@@ -269,6 +286,7 @@ public class JDYServiceImpl implements JDYService {
                 formDataApiClient.singleDataCreate(formDataCreateParam, "v5");
             } catch (Exception e) {
                 log.error("Error inserting data: {}", e.getMessage(), e);
+                throw new Exception(String.format("Error inserting data: %s", e.getMessage()));
             }
         }
     }
