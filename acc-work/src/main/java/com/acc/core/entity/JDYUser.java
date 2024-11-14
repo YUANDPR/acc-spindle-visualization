@@ -10,8 +10,8 @@ import java.util.Map;
 public class JDYUser {
     private String name;
     private String username;
-    private int status;
-    private int type;
+    private Integer status;
+    private Integer type;
     private List<Integer> departments;
 
     public JDYUser(Map<String, Object> userMap) {

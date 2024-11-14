@@ -19,8 +19,11 @@ public class SignatureAspect {
 
     private static final String SECRET_KEY = "your-secret-key"; // 请使用安全的密钥
 
-    @Autowired
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
+
+    public SignatureAspect(HttpServletRequest request) {
+        this.request = request;
+    }
 
     @Pointcut("@annotation(com.acc.core.annotation.NeedSignature)")
     public void needSignaturePointcut() {
