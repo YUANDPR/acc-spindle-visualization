@@ -11,9 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class FlowChartController {
 
-    @GetMapping
-    public String index() {
-        return "flow";
+    @GetMapping("/table")
+    public String tableIndex() {
+        return "table";
+    }
+
+    @GetMapping("/allicon")
+    public String alliconIndex() {
+        return "allicon";
     }
 
 }
