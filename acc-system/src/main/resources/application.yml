@@ -24,6 +24,14 @@ server:
       max: 800
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
+  ssl: #ssl配置
+    enabled: true  # 默认为true
+    #key-alias: alias-key # 别名(可以不进行配置)
+    # 保存SSL证书的秘钥库的路径
+    key-store: classpath:ssl/acc-spindle-visualization.online.jks
+    key-password: n7j7pqh9
+    key-store-password: n7j7pqh9
+    key-store-type: JKS
 spring:
   banner:
     charset: UTF-8
