@@ -10,7 +10,7 @@ acc:
   profile: D:/acc/uploadPath
 
 server:
-  port: 8080
+  port: 443
   servlet:
     # 应用的访问路径
     context-path: /
