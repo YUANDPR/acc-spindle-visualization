@@ -3,12 +3,17 @@
 <mapper namespace="com.acc.mapper.OrderMapper">
 
 
-    <update id="insertBatch">
-        replace into work_order (order_id, material_id, description, order_quantity, start_time, finish_time)
-        values
+    <insert id="insertBatch">
+        INSERT INTO work_order (order_id, material_id, description, order_quantity, start_time, finish_time)
+        VALUES
         <foreach collection="workOrders" item="w" separator=",">
-            (#{w.orderId}, #{w.materialId}, #{w.description}, #{w.orderQuantity},
-            #{w.startTime}, #{w.finishTime})
+            (#{w.orderId}, #{w.materialId}, #{w.description}, #{w.orderQuantity}, #{w.startTime}, #{w.finishTime})
         </foreach>
-    </update>
+        ON DUPLICATE KEY UPDATE
+        material_id = VALUES(material_id),
+        description = VALUES(description),
+        order_quantity = VALUES(order_quantity),
+        start_time = VALUES(start_time),
+        finish_time = VALUES(finish_time);
+    </insert>
 </mapper>
