@@ -2,7 +2,7 @@ package com.acc.service;
 
 import com.acc.core.exception.IllegalOrderCorrespondingQuantityException;
 import com.acc.core.exception.OrderNotFoundException;
-import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.json.JSONException;
 
 public interface JDYService {
     void pushAllData2JDY() throws Exception;
