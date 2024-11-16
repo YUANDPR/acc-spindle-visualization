@@ -62,7 +62,7 @@ public class JDYController {
             return ResponseEntity.ok("success");
         } catch (Exception e) {
             log.error("Error while processing update", e);
-            return ResponseEntity.status(400).body("error: " + e.getMessage());
+            return ResponseEntity.ok(e.getMessage());
         }
     }
 
