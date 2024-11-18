@@ -23,6 +23,31 @@ public class ExecutingOrderDto {
     boolean executing;
     Date updateTime;
 
+    public ExecutingOrderDto(JSONObject data) {
+        int id = data.optInt("id", -1);
+        String orderId = data.optString("order_id", null);
+        String executingProcedureId = data.optString("executing_procedure_id", null);
+        boolean executing = data.optJSONArray("executing").length() == 1;  // 数组
+        int update_time = data.optInt("update_time", -1);
+
+        setId(id);
+        setOrderId(Integer.parseInt(orderId));
+        setExecuting(executing);
+        setCustomUpdateTime(update_time);
+        setExecutingProcedureId(Integer.parseInt(executingProcedureId));
+    }
+
+    public ExecutingOrderDto(EWResult ewResult) {
+        setId(ewResult.getId());
+        setOrderId(ewResult.getOrderId());
+        setExecutingProcedureId(ewResult.getExecutingProcedureId());
+        setExecuting(ewResult.getExecuting() != null && !ewResult.getExecuting().isEmpty());
+        setCustomUpdateTime(ewResult.getUpdateTimeValue());
+    }
+
+    public ExecutingOrderDto() {
+    }
+
     public void generateUniqueId() {
         this.id = (int) ((System.currentTimeMillis() / 1000L) % Integer.MAX_VALUE + counter.getAndIncrement());
     }
@@ -54,7 +79,7 @@ public class ExecutingOrderDto {
         item.put("order_id", getSimpleValueMap(this.getOrderId()));
         item.put("executing_procedure_id", getSimpleValueMap(this.getExecutingProcedureId()));
 
-        if (this.isExecuting()){
+        if (this.isExecuting()) {
             item.put("executing", Collections.singletonList("executing"));
         } else {
             item.put("executing", Collections.emptyList());
@@ -67,35 +92,11 @@ public class ExecutingOrderDto {
         return ret;
     }
 
-    public ExecutingOrderDto (JSONObject data) {
-        int id = data.optInt("id", -1);
-        String orderId = data.optString("order_id", null);
-        String executingProcedureId = data.optString("executing_procedure_id", null);
-        boolean executing = data.optJSONArray("executing").length() == 1;  // 数组
-        int update_time = data.optInt("update_time", -1);
-
-        setId(id);
-        setOrderId(Integer.parseInt(orderId));
-        setExecuting(executing);
-        setCustomUpdateTime(update_time);
-        setExecutingProcedureId(Integer.parseInt(executingProcedureId));
-    }
-
-    public ExecutingOrderDto(EWResult ewResult) {
-        setId(ewResult.getId());
-        setOrderId(ewResult.getOrderId());
-        setExecutingProcedureId(ewResult.getExecutingProcedureId());
-        setExecuting(ewResult.getExecuting() != null && !ewResult.getExecuting().isEmpty());
-        setCustomUpdateTime(ewResult.getUpdateTimeValue());
+    public Long getCustomUpdateTime() {
+        return updateTime.getTime();
     }
 
     public void setCustomUpdateTime(long updateTime) {
         this.updateTime = new Date(updateTime);
     }
-
-    public Long getCustomUpdateTime() {
-        return updateTime.getTime();
-    }
-
-    public ExecutingOrderDto() {}
 }

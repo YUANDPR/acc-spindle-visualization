@@ -36,6 +36,8 @@ public class JDYServiceImpl implements JDYService {
 
     private static final FormApiClient formApiClient = new FormApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
     private static final FormDataApiClient formDataApiClient = new FormDataApiClient(HttpConstant.API_KEY, HttpConstant.HOST);
+    private final OrderService orderService;
+    private final ExecutingOrderMapper executingOrderMapper;
     /**
      * 密钥，用于生成签名。
      */
@@ -51,8 +53,6 @@ public class JDYServiceImpl implements JDYService {
      */
     @Value("${jdy.entry-id}")
     private String ENTRY_ID;
-    private final OrderService orderService;
-    private final ExecutingOrderMapper executingOrderMapper;
 
     /**
      * 构造方法，注入依赖并测试与 JDY API 的连接。

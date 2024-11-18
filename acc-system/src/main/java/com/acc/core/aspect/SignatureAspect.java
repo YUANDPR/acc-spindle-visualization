@@ -3,15 +3,17 @@ package com.acc.core.aspect;
 import com.acc.core.annotation.NeedSignature;
 import com.acc.core.exception.InvalidSignatureException;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.aspectj.lang.reflect.MethodSignature;
 
 @Aspect
 @Component

@@ -195,6 +195,7 @@ a:hover {
 .mainbox > ul > li:nth-child(2) {
     width: 40%
 }
+
 .header {
     display: flex;
     justify-content: space-between;
