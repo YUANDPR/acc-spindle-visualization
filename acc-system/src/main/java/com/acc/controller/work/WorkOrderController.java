@@ -27,7 +27,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "生产工单管理")
 public class WorkOrderController extends BaseController {
-    private String prefix = "work/order";
+    private final String prefix = "work/order";
 
     @Autowired
     private WorkOrderService workOrderService;
@@ -63,7 +63,7 @@ public class WorkOrderController extends BaseController {
     public AjaxResult export(WorkOrder workOrder) {
         List<WorkOrder> list = workOrderService.selectWorkOrderList(workOrder);
         ExcelUtil<WorkOrder> util = new ExcelUtil<WorkOrder>(WorkOrder.class);
-        return util.exportEasyExcelWithTemplate(list, "生产工单数据", "工单表模板.xlsx");
+        return util.exportExcel(list, "生产工单数据");
     }
 
     /**
