@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.acc.mapper.WorkorderDistanceSummaryMapper">
+
+    <resultMap type="WorkorderDistanceSummary" id="WorkorderDistanceSummaryResult">
+        <result property="id" column="id"/>
+        <result property="materialId" column="material_id"/>
+        <result property="totalManhattanDistance" column="total_manhattan_distance"/>
+        <result property="calcTime" column="calc_time"/>
+    </resultMap>
+
+    <sql id="selectWorkorderDistanceSummaryVo">
+        select id, material_id, total_manhattan_distance, calc_time
+        from workorder_distance_summary
+    </sql>
+
+    <select id="selectWorkorderDistanceSummaryList" parameterType="WorkorderDistanceSummary"
+            resultMap="WorkorderDistanceSummaryResult">
+        <include refid="selectWorkorderDistanceSummaryVo"/>
+        <where>
+            <if test="materialId != null  and materialId != ''">
+                and material_id = #{materialId}
+            </if>
+            <if test="totalManhattanDistance != null ">
+                and total_manhattan_distance = #{totalManhattanDistance}
+            </if>
+            <if test="calcTime != null ">
+                and calc_time = #{calcTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWorkorderDistanceSummaryById" parameterType="Long"
+            resultMap="WorkorderDistanceSummaryResult">
+        <include refid="selectWorkorderDistanceSummaryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="getAccount" resultType="java.lang.Integer">
+        SELECT COALESCE(SUM(total_manhattan_distance), 0) AS total_sum
+        FROM workorder_distance_summary
+    </select>
+
+    <select id="getAll" resultType="com.acc.core.entity.WorkorderDistanceSummary">
+        select *
+        from workorder_distance_summary;
+    </select>
+
+    <insert id="insertWorkorderDistanceSummary" parameterType="WorkorderDistanceSummary" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into workorder_distance_summary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialId != null">material_id,
+            </if>
+            <if test="totalManhattanDistance != null">total_manhattan_distance,
+            </if>
+            <if test="calcTime != null">calc_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialId != null">#{materialId},
+            </if>
+            <if test="totalManhattanDistance != null">#{totalManhattanDistance},
+            </if>
+            <if test="calcTime != null">#{calcTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWorkorderDistanceSummary" parameterType="WorkorderDistanceSummary">
+        update workorder_distance_summary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialId != null">material_id =
+                #{materialId},
+            </if>
+            <if test="totalManhattanDistance != null">total_manhattan_distance =
+                #{totalManhattanDistance},
+            </if>
+            <if test="calcTime != null">calc_time =
+                #{calcTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWorkorderDistanceSummaryById" parameterType="Long">
+        delete
+        from workorder_distance_summary
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWorkorderDistanceSummaryByIds" parameterType="String">
+        delete from workorder_distance_summary where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="update">
+        INSERT INTO workorder_distance_summary (material_id, total_manhattan_distance)
+        WITH process_sequence AS (SELECT material_id,
+                                         operation_id,
+                                         work_center AS current_workgroup,
+                                         LEAD(work_center) OVER (
+                                             PARTITION BY material_id
+                                             ORDER BY operation_id
+                                             )       AS next_workgroup
+                                  FROM work_procedure)
+        SELECT wo.material_id,
+               SUM(ABS(l2.coord_x - l1.coord_x) + ABS(l2.coord_y - l1.coord_y)) AS total_dist
+        FROM work_order wo
+                 JOIN process_sequence ps ON wo.material_id = ps.material_id
+                 JOIN workgroup_location l1 ON ps.current_workgroup = l1.workgroup_name
+                 LEFT JOIN workgroup_location l2 ON ps.next_workgroup = l2.workgroup_name
+        WHERE ps.next_workgroup IS NOT NULL
+        GROUP BY wo.material_id
+        ON DUPLICATE KEY UPDATE total_manhattan_distance = VALUES(total_manhattan_distance);
+    </insert>
+</mapper>

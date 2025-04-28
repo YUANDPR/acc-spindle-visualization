@@ -1,41 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('生产工单列表')"/>
-    <style>
-        .select-list {
-            display: flex;
-            flex-wrap: wrap; /* 允许项目换行 */
-            justify-content: flex-start; /* 左对齐 */
-        }
-
-        .select-list li {
-            display: flex;
-            align-items: center; /* 垂直居中对齐 */
-            margin-bottom: 10px;
-            flex-basis: 100%; /* 初始占据100%宽度，当空间足够时可并排 */
-        }
-
-        .select-list input[type="text"] {
-            margin-left: 10px; /* 标签与输入框之间留有间距 */
-            flex: 1; /* 输入框尽可能占据剩余空间 */
-        }
-
-        .select-list .time-input {
-            width: auto; /* 自动宽度 */
-        }
-
-        .select-list .btn {
-            margin-right: 5px;
-        }
-
-        @media (min-width: 500px) {
-            /* 当屏幕宽度大于等于500px时 */
-            .select-list li {
-                flex-basis: 48%; /* 每行两个项目，留出一些间隔 */
-            }
-        }
-    </style>
+    <th:block th:include="include :: header('工单工艺流程流转总距离汇总列表')"/>
 </head>
 <body class="gray-bg">
 <div class="container-div">
@@ -45,29 +11,16 @@
                 <div class="select-list">
                     <ul>
                         <li>
-                            <label>生产工单：</label>
-                            <input name="orderId" type="text"/>
-                        </li>
-                        <li>
-                            <label>物料号：</label>
+                            <label>工单物料号：</label>
                             <input name="materialId" type="text"/>
                         </li>
                         <li>
-                            <label>物料描述：</label>
-                            <input name="description" type="text"/>
+                            <label>总曼哈顿距离：</label>
+                            <input name="totalManhattanDistance" type="text"/>
                         </li>
                         <li>
-                            <label>订单数量：</label>
-                            <input name="orderQuantity" type="text"/>
-                        </li>
-                        <li>
-                            <label>开始时间：</label>
-                            <input class="time-input" name="startTime" placeholder="请选择开始时间"
-                                   type="text"/>
-                        </li>
-                        <li>
-                            <label>结束时间：</label>
-                            <input class="time-input" name="finishTime" placeholder="请选择结束时间"
+                            <label>计算时间：</label>
+                            <input class="time-input" name="calcTime" placeholder="请选择计算时间"
                                    type="text"/>
                         </li>
                         <li>
@@ -82,18 +35,18 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:order:add">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:summary:add">
                 <i class="fa fa-plus"></i> 添加
             </a>
             <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
-               shiro:hasPermission="system:order:edit">
+               shiro:hasPermission="system:summary:edit">
                 <i class="fa fa-edit"></i> 修改
             </a>
             <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
-               shiro:hasPermission="system:order:remove">
+               shiro:hasPermission="system:summary:remove">
                 <i class="fa fa-remove"></i> 删除
             </a>
-            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:order:export">
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:summary:export">
                 <i class="fa fa-download"></i> 导出
             </a>
         </div>
@@ -102,12 +55,11 @@
         </div>
     </div>
 </div>
-
 <th:block th:include="include :: footer"/>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('system:order:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:order:remove')}]];
-    var prefix = ctx + "system/order";
+    var editFlag = [[${@permission.hasPermi('system:summary:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:summary:remove')}]];
+    var prefix = ctx + "system/summary";
 
     $(function () {
         var options = {
@@ -116,38 +68,26 @@
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
-            modalName: "生产工单",
+            modalName: "工单工艺流程流转总距离汇总",
             columns: [{
                 checkbox: true
             },
                 {
                     field: 'id',
-                    title: '主键',
+                    title: '${comment}',
                     visible: false
                 },
                 {
-                    field: 'orderId',
-                    title: '生产工单'
-                },
-                {
                     field: 'materialId',
-                    title: '物料号'
+                    title: '工单物料号'
                 },
                 {
-                    field: 'description',
-                    title: '物料描述'
+                    field: 'totalManhattanDistance',
+                    title: '总曼哈顿距离'
                 },
                 {
-                    field: 'orderQuantity',
-                    title: '订单数量'
-                },
-                {
-                    field: 'startTime',
-                    title: '开始时间'
-                },
-                {
-                    field: 'finishTime',
-                    title: '结束时间'
+                    field: 'calcTime',
+                    title: '计算时间'
                 },
                 {
                     title: '操作',

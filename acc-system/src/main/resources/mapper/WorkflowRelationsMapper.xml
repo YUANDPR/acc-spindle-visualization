@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.acc.mapper.WorkflowRelationsMapper">
+
+    <resultMap type="WorkflowRelations" id="WorkflowRelationsResult">
+        <result property="id" column="id"/>
+        <result property="sourceWorkgroup" column="source_workgroup"/>
+        <result property="targetWorkgroup" column="target_workgroup"/>
+        <result property="relationValue" column="relation_value"/>
+    </resultMap>
+
+    <sql id="selectWorkflowRelationsVo">
+        select id, source_workgroup, target_workgroup, relation_value
+        from workflow_relations
+    </sql>
+
+    <select id="selectWorkflowRelationsList" parameterType="WorkflowRelations" resultMap="WorkflowRelationsResult">
+        <include refid="selectWorkflowRelationsVo"/>
+        <where>
+            <if test="sourceWorkgroup != null  and sourceWorkgroup != ''">
+                and source_workgroup = #{sourceWorkgroup}
+            </if>
+            <if test="targetWorkgroup != null  and targetWorkgroup != ''">
+                and target_workgroup = #{targetWorkgroup}
+            </if>
+            <if test="relationValue != null ">
+                and relation_value = #{relationValue}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWorkflowRelationsById" parameterType="Long"
+            resultMap="WorkflowRelationsResult">
+        <include refid="selectWorkflowRelationsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWorkflowRelations" parameterType="WorkflowRelations" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into workflow_relations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sourceWorkgroup != null and sourceWorkgroup != ''">source_workgroup,
+            </if>
+            <if test="targetWorkgroup != null and targetWorkgroup != ''">target_workgroup,
+            </if>
+            <if test="relationValue != null">relation_value,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sourceWorkgroup != null and sourceWorkgroup != ''">#{sourceWorkgroup},
+            </if>
+            <if test="targetWorkgroup != null and targetWorkgroup != ''">#{targetWorkgroup},
+            </if>
+            <if test="relationValue != null">#{relationValue},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWorkflowRelations" parameterType="WorkflowRelations">
+        update workflow_relations
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sourceWorkgroup != null and sourceWorkgroup != ''">source_workgroup =
+                #{sourceWorkgroup},
+            </if>
+            <if test="targetWorkgroup != null and targetWorkgroup != ''">target_workgroup =
+                #{targetWorkgroup},
+            </if>
+            <if test="relationValue != null">relation_value =
+                #{relationValue},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWorkflowRelationsById" parameterType="Long">
+        delete
+        from workflow_relations
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWorkflowRelationsByIds" parameterType="String">
+        delete from workflow_relations where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

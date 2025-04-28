@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.acc.mapper.WorkgroupLocationMapper">
+
+    <resultMap type="WorkgroupLocation" id="WorkgroupLocationResult">
+        <result property="id" column="id"/>
+        <result property="workgroupName" column="workgroup_name"/>
+        <result property="coordX" column="coord_x"/>
+        <result property="coordY" column="coord_y"/>
+    </resultMap>
+
+    <sql id="selectWorkgroupLocationVo">
+        select id, workgroup_name, coord_x, coord_y
+        from workgroup_location
+    </sql>
+
+    <select id="selectWorkgroupLocationList" parameterType="WorkgroupLocation" resultMap="WorkgroupLocationResult">
+        <include refid="selectWorkgroupLocationVo"/>
+        <where>
+            <if test="workgroupName != null  and workgroupName != ''">
+                and workgroup_name like concat('%', #{workgroupName}, '%')
+            </if>
+            <if test="coordX != null ">
+                and coord_x = #{coordX}
+            </if>
+            <if test="coordY != null ">
+                and coord_y = #{coordY}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWorkgroupLocationById" parameterType="Long"
+            resultMap="WorkgroupLocationResult">
+        <include refid="selectWorkgroupLocationVo"/>
+        where id = #{id}
+    </select>
+    <select id="getAll" resultType="com.acc.core.entity.WorkgroupLocation">
+        select *
+        from workgroup_location;
+    </select>
+
+    <insert id="insertWorkgroupLocation" parameterType="WorkgroupLocation" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into workgroup_location
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workgroupName != null and workgroupName != ''">workgroup_name,
+            </if>
+            <if test="coordX != null">coord_x,
+            </if>
+            <if test="coordY != null">coord_y,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workgroupName != null and workgroupName != ''">#{workgroupName},
+            </if>
+            <if test="coordX != null">#{coordX},
+            </if>
+            <if test="coordY != null">#{coordY},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWorkgroupLocation" parameterType="WorkgroupLocation">
+        update workgroup_location
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="workgroupName != null and workgroupName != ''">workgroup_name =
+                #{workgroupName},
+            </if>
+            <if test="coordX != null">coord_x =
+                #{coordX},
+            </if>
+            <if test="coordY != null">coord_y =
+                #{coordY},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWorkgroupLocationById" parameterType="Long">
+        delete
+        from workgroup_location
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWorkgroupLocationByIds" parameterType="String">
+        delete from workgroup_location where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

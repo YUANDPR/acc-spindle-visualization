@@ -94,8 +94,7 @@ public class WorkOrderController extends BaseController {
     @GetMapping("/edit/{id}")
     @ApiOperation("获取修改工单页面")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
-        WorkOrder workOrder =
-                workOrderService.selectWorkOrderById(id);
+        WorkOrder workOrder = workOrderService.selectWorkOrderById(id);
         mmap.put("workOrder", workOrder);
         return prefix + "/edit";
     }

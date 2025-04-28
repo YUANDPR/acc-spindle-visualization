@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.acc.mapper.ContrastTableMapper">
+
+    <resultMap type="ContrastTable" id="ContrastTableResult">
+        <result property="id" column="id"/>
+        <result property="state" column="state"/>
+        <result property="value" column="value"/>
+    </resultMap>
+
+    <sql id="selectContrastTableVo">
+        select id, state, value
+        from contrast_table
+    </sql>
+
+    <select id="selectContrastTableList" parameterType="ContrastTable" resultMap="ContrastTableResult">
+        <include refid="selectContrastTableVo"/>
+        <where>
+            <if test="state != null  and state != ''">
+                and state = #{state}
+            </if>
+            <if test="value != null ">
+                and value = #{value}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectContrastTableById" parameterType="Long"
+            resultMap="ContrastTableResult">
+        <include refid="selectContrastTableVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertContrastTable" parameterType="ContrastTable">
+        insert into contrast_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="state != null">state,
+            </if>
+            <if test="value != null">value,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="state != null">#{state},
+            </if>
+            <if test="value != null">#{value},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateContrastTable" parameterType="ContrastTable">
+        update contrast_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="state != null">state =
+                #{state},
+            </if>
+            <if test="value != null">value =
+                #{value},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContrastTableById" parameterType="Long">
+        delete
+        from contrast_table
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteContrastTableByIds" parameterType="String">
+        delete from contrast_table where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
