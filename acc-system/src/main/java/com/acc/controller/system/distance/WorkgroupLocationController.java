@@ -26,7 +26,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/system/location")
 public class WorkgroupLocationController extends BaseController {
-    private String prefix = "system/location";
+    private final String prefix = "system/location";
 
     @Autowired
     private IWorkgroupLocationService workgroupLocationService;
@@ -117,8 +117,13 @@ public class WorkgroupLocationController extends BaseController {
 
     @GetMapping("/list")
     @ResponseBody
-    public List<WorkgroupLocation> getAll() {
-        ;
-        return workgroupLocationService.getAll();
+    public List<WorkgroupLocation> getWorksetAll() {
+        return workgroupLocationService.getWorksetAll();
+    }
+
+    @GetMapping("/update")
+    @ResponseBody
+    public AjaxResult update() {
+        return toAjax(workgroupLocationService.update());
     }
 }

@@ -55,4 +55,9 @@ public class EChartsController extends BaseController {
         return "screen";
     }
 
+    @GetMapping("/layout")
+    public String getLayout() {
+        return "layout";
+    }
+
 }

@@ -87,8 +87,19 @@ public class WorkgroupLocationServiceImpl implements IWorkgroupLocationService {
         return workgroupLocationMapper.deleteWorkgroupLocationById(id);
     }
 
+    /**
+     * 获取全部数据
+     */
     @Override
-    public List<WorkgroupLocation> getAll() {
-        return workgroupLocationMapper.getAll();
+    public List<WorkgroupLocation> getWorksetAll() {
+        return workgroupLocationMapper.getWorksetAll();
+    }
+
+    /**
+     * 更新坐标值
+     */
+    @Override
+    public int update() {
+        return workgroupLocationMapper.update();
     }
 }

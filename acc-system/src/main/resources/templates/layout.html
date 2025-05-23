@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>工作中心布局</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            border: 2px solid #ccc;
+            margin: 20px auto;
+        }
+
+        .workgroup {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            line-height: 100px;
+            cursor: grab;
+            border-radius: 5px;
+            user-select: none;
+        }
+
+        .workgroup:active {
+            cursor: grabbing;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container"></div>
+<button id="saveButton">确定</button>
+
+<script>
+    const container = document.getElementById('container');
+    const saveButton = document.getElementById('saveButton');
+
+    let currentDraggedElement = null;
+
+    // 页面加载时从后端获取数据并初始化方块
+    window.onload = () => {
+        fetch('/system/location/list')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    createWorkgroup(item.workgroupName, item.coordX, item.coordY);
+                });
+            })
+            .catch(error => {
+                console.error('获取数据失败:', error);
+                alert('无法加载工作中心信息，请刷新页面重试。');
+            });
+    };
+
+    // 创建工作中心方块
+    function createWorkgroup(workgroupName, x, y) {
+        const workgroup = document.createElement('div');
+        workgroup.className = 'workgroup';
+        workgroup.textContent = workgroupName;
+        workgroup.dataset.workgroupName = workgroupName;
+        workgroup.style.left = `${x}px`;
+        workgroup.style.top = `${y}px`;
+
+        // 添加拖拽事件
+        workgroup.addEventListener('mousedown', (e) => {
+            currentDraggedElement = e.target;
+
+            const startX = e.clientX - currentDraggedElement.offsetLeft;
+            const startY = e.clientY - currentDraggedElement.offsetTop;
+
+            function onMouseMove(e) {
+                if (currentDraggedElement) {
+                    const x = e.clientX - startX;
+                    const y = e.clientY - startY;
+
+                    // 更新方块的位置
+                    currentDraggedElement.style.left = `${x}px`;
+                    currentDraggedElement.style.top = `${y}px`;
+                }
+            }
+
+            function onMouseUp() {
+                currentDraggedElement = null;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
+        container.appendChild(workgroup);
+    }
+
+    // 点击保存按钮时，收集数据并发送到后端
+    saveButton.addEventListener('click', () => {
+        const workgroups = document.querySelectorAll('.workgroup');
+        const data = [];
+
+        workgroups.forEach(workgroup => {
+            const workgroupName = workgroup.dataset.workgroupName;
+            const coordX = parseInt(workgroup.style.left, 10);
+            const coordY = parseInt(workgroup.style.top, 10);
+
+            data.push({
+                workgroupName: workgroupName,
+                coordX: coordX,
+                coordY: coordY
+            });
+        });
+
+        console.log('发送的数据:', data);
+
+        // 使用 Fetch API 发送数据到后端
+        fetch('/system/location/edit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                $.modal.alertSuccess('保存成功！');
+            })
+            .catch(error => {
+                $.modal.alertError('保存失败：' + error);
+            });
+    });
+</script>
+<script src="../static/acc/js/acc-ui.js" th:src="@{/acc/js/acc-ui.js}"></script>
+</body>
+</html>

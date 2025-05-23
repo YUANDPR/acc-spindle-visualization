@@ -36,9 +36,12 @@
         <include refid="selectWorkgroupLocationVo"/>
         where id = #{id}
     </select>
-    <select id="getAll" resultType="com.acc.core.entity.WorkgroupLocation">
-        select *
-        from workgroup_location;
+
+    <select id="getWorksetAll" resultType="com.acc.core.entity.WorkgroupLocation">
+        select work_set as workgroupName,
+               coord_x,
+               coord_y
+        from workset_location;
     </select>
 
     <insert id="insertWorkgroupLocation" parameterType="WorkgroupLocation" useGeneratedKeys="true"
@@ -76,6 +79,14 @@
             </if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="update">
+        UPDATE workgroup_location wg
+            JOIN workgroup_workset wws ON wg.workgroup_name = wws.workgroup_name
+            JOIN workset_location wsl ON wws.work_set = wsl.work_set
+        SET wg.coord_x = wsl.coord_x,
+            wg.coord_y = wsl.coord_y;
     </update>
 
     <delete id="deleteWorkgroupLocationById" parameterType="Long">
